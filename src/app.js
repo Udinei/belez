@@ -1,5 +1,6 @@
 ﻿import express from 'express';
 import routes from './routes';
+import './database'; // habilitando a app a acessar o BD
 
 class App {
 
@@ -10,11 +11,11 @@ class App {
          this.middlewares();
          this.routes(); // permite acesso a rotas
     }
- 
+
     // registra todos os middlewares da app
     middlewares(){
-       this.server.use(express.json()); // permite usar estruturas de dados json no express     
-   
+       this.server.use(express.json()); // permite usar estruturas de dados json no express
+
     }
 
     // middleware de rotas
@@ -23,5 +24,5 @@ class App {
     }
 }
 
-//module.exports = new App().server; 
+//module.exports = new App().server;
 export default new App().server; // server - umico que pode ser exportado da classe
