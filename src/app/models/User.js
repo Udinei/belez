@@ -22,8 +22,12 @@ class User extends Model {
       }
     });
 
-    return this;
+      return this;
   }
+    // essa funcao implementa todos os metodos de relacionamentes da classe
+    static associate(models){
+      this.belongsTo(models.File, { foreignKey: 'avatar_id' }); // a key avatar_id pertence ao model File.js
+    }
 
   // metodo de validação de senha criptografada com bcrypt
   // retorna true se senha ok

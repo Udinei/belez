@@ -2,9 +2,9 @@
 import multer from 'multer';
 import multerConfig from './config/multer';
 
-import UserController from './app/controllers/UserController'
-import SessionController from './app/controllers/SessionController'
-
+import UserController from './app/controllers/UserController';
+import SessionController from './app/controllers/SessionController';
+import FileController from './app/controllers/FileController';
 import authMiddleware from './app/middlewares/auth';
 
 const routes = new Router();
@@ -19,9 +19,8 @@ const upload = multer(multerConfig);
   routes.put('/users', UserController.update);
 
   // trata emvio de imagens
-  routes.post('/files', upload.single('file'),(req, res) => {
-      return res.json({ok : true});
-  });
+  routes.post('/files', upload.single('file'), FileController.store);
+
 
 //module.exports = routes;
 export default routes;
