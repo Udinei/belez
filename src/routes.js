@@ -7,6 +7,7 @@ import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
 import authMiddleware from './app/middlewares/auth';
 import ProviderController from './app/controllers/ProviderController';
+import AppoitmentController from './app/controllers/AppoitmentController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -21,6 +22,7 @@ const upload = multer(multerConfig);
 
   routes.get('/providers', ProviderController.index);
 
+  routes.post('/appoitments', AppoitmentController.store);
   // trata emvio de imagens
   routes.post('/files', upload.single('file'), FileController.store);
 

@@ -22,7 +22,7 @@ module.exports = {
       },
       provider_id: {
         type: Sequelize.INTEGER,  // tipo do campo
-        references: { model: 'files', key: 'id' }, // tabela origem, e campo estrangeiro
+        references: { model: 'users', key: 'id' }, // tabela origem, e campo estrangeiro
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
         allowNull: true,

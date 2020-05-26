@@ -1,6 +1,6 @@
 ﻿import Sequelize, { Model } from 'sequelize';
 
-class Appoitment extends Model {
+class Appointments extends Model {
   static init(sequelize) { // sequelize - tem a conexão com BD
     super.init(
       {
@@ -19,6 +19,6 @@ class Appoitment extends Model {
       this.belongsTo(models.User, { foreignKey: 'provider_id', as: 'provider' });
     }
 }
-export default Appoitment;
+export default Appointments;
 
 
