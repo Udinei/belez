@@ -1,4 +1,5 @@
 ﻿import Sequelize from 'sequelize';
+import mongoose from 'mongoose';
 
 import User from '../app/models/User'; // acessa model User
 import File from '../app/models/File';
@@ -12,6 +13,7 @@ const models = [User, File, Appointments]; // array de models da app
 class Database {
   constructor(){
     this.init();
+    this.mongo();
   }
 
   init() {
@@ -19,6 +21,13 @@ class Database {
     models
     .map(model => model.init(this.connection)) // Realiza para cada Models do Array a conexao com o BD
     .map(model => model.associate && model.associate(this.connection.models)); // salva a referencia de um id de arquvios(avatar) dentro de uma tabela, somente para os models que tem o metodo associate
+  }
+
+  mongo(){
+    this.mongoConnection = mongoose.connect(
+      'mongodb://localhost:27017/belez',
+      { useNewUrlParser: true, useFindAndModify: true,  useUnifiedTopology: true }
+    );
   }
 }
 

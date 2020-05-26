@@ -8,6 +8,7 @@ import FileController from './app/controllers/FileController';
 import authMiddleware from './app/middlewares/auth';
 import ProviderController from './app/controllers/ProviderController';
 import AppoitmentController from './app/controllers/AppoitmentController';
+import ScheduleController from './app/controllers/ScheduleController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -30,7 +31,7 @@ const upload = multer(multerConfig);
   // agendamentos
   routes.post('/appoitments', AppoitmentController.store);
 
-
+  routes.get('/schedule', ScheduleController.index);
 
   // trata emvio de imagens
   routes.post('/files', upload.single('file'), FileController.store);
