@@ -1,4 +1,6 @@
 ﻿import express from 'express';
+import path from 'path';
+
 import routes from './routes';
 import './database'; // habilitando a app a acessar o BD
 
@@ -15,8 +17,10 @@ class App {
     // registra todos os middlewares da app
     middlewares(){
        this.server.use(express.json()); // permite usar estruturas de dados json no express
-
-    }
+       this.server.use('/files',
+       express.static(path.resolve(__dirname, '..', 'tmp', 'uploads' ))
+       );
+    };
 
     // middleware de rotas
     routes(){

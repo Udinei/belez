@@ -2,10 +2,11 @@
 
 import User from '../app/models/User'; // acessa model User
 import File from '../app/models/File';
+import Appoitment from '../app/models/Appoitment';
 
 import databaseConfig from '../config/database'; // carrega configurações de acesso ao BD
 
-const models = [User, File]; // array de models da app
+const models = [User, File, Appoitment]; // array de models da app
 
 // modela configuracao da base de dados
 class Database {
