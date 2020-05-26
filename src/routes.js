@@ -18,11 +18,20 @@ const upload = multer(multerConfig);
   // somente as rotas abaixo dessa rota vao usar o middleware (authMiddleware) de forma global (chamado sempre que uma rota for requisitado)
   routes.use(authMiddleware);
 
+  // usuarios do sistema
   routes.put('/users', UserController.update);
 
+  // usuarios prestadores de servico
   routes.get('/providers', ProviderController.index);
 
+  // listgem de agendamentos
+  routes.get('/appoitments', AppoitmentController.index);
+
+  // agendamentos
   routes.post('/appoitments', AppoitmentController.store);
+
+
+
   // trata emvio de imagens
   routes.post('/files', upload.single('file'), FileController.store);
 

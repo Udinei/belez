@@ -1,9 +1,38 @@
 ﻿import * as Yup from 'yup' // importando framewok de validação
 import { startOfMinute, startOfHour, getMinutes, parseISO, isBefore } from 'date-fns';
 import User from '../models/User';
+import File from '../models/File';
 import Appointments from '../models/Appointments';
 
+
 class AppointmentsController {
+
+  // listagens dos agendamentos
+  async index(req, res){
+   const appointments = await Appointments.findAll({
+        where:{user_id: req.userId, canceled_at: null },
+        order:['date'],
+        attributes: ['id','date'],
+        include:[
+          {
+            model: User,
+            as: 'provider',
+            attributes: ['id', 'name'],
+            include: [
+                {
+                  model: File,
+                  as:'avatar',
+                  attributes: ['id', 'path', 'url'],
+                }
+            ]
+          }
+        ],
+   });
+
+   return res.json(appointments);
+
+  }
+
   async store(req, res) {
 
     //console.log('dd' + provider_id);
@@ -31,7 +60,7 @@ class AppointmentsController {
     const minutos = getMinutes(new Date(date))
      console.log('minutos ' + minutos);
 
-     // valida se o agendamente e de meia hora ou hora cheia
+     // valida se o agendamento e de meia hora ou hora cheia
      if(minutos !== 30 && minutos !== 0){
        return res.status(400).json({ error: 'Agendamentos são permitidos a cada 30 minutos'})
      }
@@ -47,7 +76,7 @@ class AppointmentsController {
     const checkAvailability = await Appointments.findOne({
       where: {
         provider_id,
-        canceled_at: null,
+        canceled_at: null,  // somente os que não foram cancelados
         date: date,
       },
     });
