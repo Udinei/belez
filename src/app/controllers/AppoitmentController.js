@@ -1,8 +1,10 @@
 ﻿import * as Yup from 'yup' // importando framewok de validação
-import { startOfMinute, startOfHour, getMinutes, parseISO, isBefore } from 'date-fns';
+import { format, startOfHour, getMinutes, parseISO, isBefore } from 'date-fns';
+import  pt from 'date-fns/locale/pt'
 import User from '../models/User';
 import File from '../models/File';
 import Appointments from '../models/Appointments';
+import Notification from '../schemas/Notification';
 
 
 class AppointmentsController {
@@ -59,10 +61,18 @@ class AppointmentsController {
       where: { id: provider_id, provider: true },
     });
 
+    // TODO: O usuario prestador de serviço nao pode agender um serviço pra si proprio
+
+    // se usuario nao for um prestador de servico
+    if (!checkIsProvider) {
+         return res.status(401)
+            .json({ error: 'Você não pode criar um agendamento como prestador de serviço' });
+    }
+
+
     // pega a data somente com o inicio da hora (sem minuto e segundo)
     const hourStart = startOfHour(parseISO(date));
     const minutos = getMinutes(new Date(date))
-     console.log('minutos ' + minutos);
 
      // valida se o agendamento e de meia hora ou hora cheia
      if(minutos !== 30 && minutos !== 0){
@@ -73,10 +83,7 @@ class AppointmentsController {
     if (isBefore(hourStart, new Date())) {
           return res.status(400).json({ error: 'Não é permitido datas passadas' })
     }
-    console.log('verificando1..' + date);
-    console.log('verificando2..' + hourStart);
-
-    // verifica no BD se a data esta disponivel
+      // verifica no BD se a data esta disponivel
     const checkAvailability = await Appointments.findOne({
       where: {
         provider_id,
@@ -85,21 +92,32 @@ class AppointmentsController {
       },
     });
 
-    // se
+    // se data de agendamento nao disponivel
     if (checkAvailability) {
       return res.status(400).json({ error: 'Agendamento para esse dia e horario não esta disponivel' });
     }
 
-    // provider nao encontrado
-    if (!checkIsProvider) {
-      return res.status(401)
-        .json({ error: 'You can only create appoiments with providers' });
-    }
 
     const appointments = await Appointments.create({
       user_id: req.userId,
       provider_id,
       date: date,
+    });
+
+    // recupera o usuario por id
+    const user = await User.findByPk(req.userId);
+
+    // formata data para exibição
+    const formattedDate = format(
+      parseISO(date),
+      "'dia' dd 'de' MMMM', às' H:mm'h'", // ex. formatacao dia 22 de Junho, às 8:30h
+      { locale: pt }
+      );
+
+    // notificando o provedor de servico
+    await Notification.create({
+     content: `Novo agendamento de ${user.name} para ${formattedDate}`,
+     user: provider_id,
     });
 
     return res.json(appointments);

@@ -9,6 +9,7 @@ import authMiddleware from './app/middlewares/auth';
 import ProviderController from './app/controllers/ProviderController';
 import AppoitmentController from './app/controllers/AppoitmentController';
 import ScheduleController from './app/controllers/ScheduleController';
+import NotificationController from './app/controllers/NotificationController'
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -32,6 +33,11 @@ const upload = multer(multerConfig);
   routes.post('/appoitments', AppoitmentController.store);
 
   routes.get('/schedule', ScheduleController.index);
+
+  routes.get('/notifications', NotificationController.index);
+
+  // alterar a leitura das notificação
+  routes.put('/notifications/:id', NotificationController.update);
 
   // trata emvio de imagens
   routes.post('/files', upload.single('file'), FileController.store);
