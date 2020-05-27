@@ -32,12 +32,17 @@ const upload = multer(multerConfig);
   // agendamentos
   routes.post('/appoitments', AppoitmentController.store);
 
+  // cancelar agendamento
+  routes.delete('/appoitments/:id', AppoitmentController.delete);
+
   routes.get('/schedule', ScheduleController.index);
 
   routes.get('/notifications', NotificationController.index);
 
   // alterar a leitura das notificação
   routes.put('/notifications/:id', NotificationController.update);
+
+
 
   // trata emvio de imagens
   routes.post('/files', upload.single('file'), FileController.store);

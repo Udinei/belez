@@ -1,9 +1,9 @@
 ﻿import * as Yup from 'yup' // importando framewok de validação
-import { format, startOfHour, getMinutes, parseISO, isBefore } from 'date-fns';
+import { format, startOfHour, getMinutes, parseISO, isBefore, subHours } from 'date-fns';
 import  pt from 'date-fns/locale/pt'
 import User from '../models/User';
 import File from '../models/File';
-import Appointments from '../models/Appointments';
+import Appointment from '../models/Appointments';
 import Notification from '../schemas/Notification';
 
 
@@ -13,7 +13,7 @@ class AppointmentsController {
   async index(req, res){
     const { page = 1 } = req.query; // se valor de page nao informado inicia page com 1
 
-   const appointments = await Appointments.findAll({
+   const appointments = await Appointment.findAll({
         where:{user_id: req.userId, canceled_at: null },
         order:['date'],
         attributes: ['id','date'],
@@ -84,7 +84,7 @@ class AppointmentsController {
           return res.status(400).json({ error: 'Não é permitido datas passadas' })
     }
       // verifica no BD se a data esta disponivel
-    const checkAvailability = await Appointments.findOne({
+    const checkAvailability = await Appointment.findOne({
       where: {
         provider_id,
         canceled_at: null,  // somente os que não foram cancelados
@@ -98,7 +98,7 @@ class AppointmentsController {
     }
 
 
-    const appointments = await Appointments.create({
+    const appointments = await Appointment.create({
       user_id: req.userId,
       provider_id,
       date: date,
@@ -121,6 +121,36 @@ class AppointmentsController {
     });
 
     return res.json(appointments);
+  }
+
+  async delete(req, res){
+      const appointment = await Appointment.findByPk(req.params.id);
+
+      if(appointment.user_id !== req.userId){
+        return res.status(401).json({
+          error: "Você não tem permissão para cancelar este agendamento."
+        });
+      }
+
+       // retira duas horas da hora atual em (date)
+      const dataWithSub = subHours(appointment.data, 2);
+
+      // apos retirar duas horas do agendamento,
+      // e comparar com a hora atual, e for menor que duas horas
+      // do agendamento então nao pode mais cancelar o agendamento
+      if(isBefore(dataWithSub, new Date())){
+          return res.status(401).json({
+              error: 'Você não pode cancelar agendamentos com 2 horas antes do atendimento.',
+          });
+      }
+
+      // se ainda estiver em tempo de cancelar, seta a data atual
+      appointment.canceled_at = new Date();
+
+      // salva
+      await appointment.save();
+      // retorna o agendamento cancelado
+      return res.json(appointment);
   }
 }
 
