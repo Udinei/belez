@@ -5,7 +5,9 @@ import User from '../models/User';
 import File from '../models/File';
 import Appointment from '../models/Appointments';
 import Notification from '../schemas/Notification';
-import Mail from '../../lib/Mail';
+
+import CancellationMail from '../jobs/CancellationMail';
+import Queue from '../../lib/Queue';
 
 
 class AppointmentsController {
@@ -125,6 +127,7 @@ class AppointmentsController {
   }
 
   async delete(req, res) {
+
     const appointment = await Appointment.findByPk(req.params.id, {
       include: [
         {
@@ -161,21 +164,13 @@ class AppointmentsController {
     // se ainda estiver em tempo de cancelar, seta a data atual
     appointment.canceled_at = new Date();
 
-    // salva
+    // salva o agendamento
     await appointment.save();
 
-    // enviando email para o prestador de servico
-    await Mail.sendMail({
-      to: `${appointment.provider.name} <${appointment.provider.email}>`,
-      subject: 'Agendamento cancelado',
-     template: 'cancellation',
-     context: {
-       provider: appointment.provider.name,
-       user: appointment.user.name,
-       date: format(appointment.date, "'dia' dd 'de' MMMM', às' H:mm'h'",{
-         locale: pt,
-      }),
-     },
+    // adicionando o agendadmento a fila Cancellation para controle do redis
+    // o seu processamento
+    await Queue.add(CancellationMail.key, {
+        appointment,
     });
 
     // retorna o agendamento cancelado
