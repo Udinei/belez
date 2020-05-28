@@ -38,9 +38,14 @@ class Queue {
 
     jobs.forEach(job => {
       const { bee, handle } = this.queues[job.key];
-      bee.process(handle); // processa o envio do email
+      bee.on('failed', this.handleFailure).process(handle); // processa o envio do email, e escuta se houve falhas
     });
   }
+
+  handleFailure(job, err){
+    console.log(`Quee ${job.queue.name} : FAILED`, err);
+  }
+
 }
 
 export default new Queue();
