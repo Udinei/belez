@@ -10,6 +10,7 @@ import ProviderController from './app/controllers/ProviderController';
 import AppoitmentController from './app/controllers/AppoitmentController';
 import ScheduleController from './app/controllers/ScheduleController';
 import NotificationController from './app/controllers/NotificationController'
+import AvailableController from './app/controllers/AvailableController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -25,6 +26,8 @@ const upload = multer(multerConfig);
 
   // usuarios prestadores de servico
   routes.get('/providers', ProviderController.index);
+  // lista todos os horarios disponiveis para o prestador de serviço especifico
+  routes.get('/providers/:providerId/available', AvailableController.index);
 
   // listgem de agendamentos
   routes.get('/appoitments', AppoitmentController.index);
