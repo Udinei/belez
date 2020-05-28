@@ -19,7 +19,7 @@ class AppointmentsController {
     const appointments = await Appointment.findAll({
       where: { user_id: req.userId, canceled_at: null },
       order: ['date'],
-      attributes: ['id', 'date'],
+      attributes: ['id', 'date', 'past', 'cancelable'], // past =false se o horario ainda nao passou
       limit: 20, // qtd de registro da paginação
       offset: (page - 1) * 20,
       include: [

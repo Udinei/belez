@@ -1,11 +1,24 @@
 ﻿import Sequelize, { Model } from 'sequelize';
+import { isBefore, subHours } from 'date-fns';
 
 class Appointments extends Model {
   static init(sequelize) { // sequelize - tem a conexão com BD
     super.init(
       {
           date: Sequelize.DATE,
-          canceled_at: Sequelize.DATE
+          canceled_at: Sequelize.DATE,
+          past: { // false se horario ja passou
+             type: Sequelize.VIRTUAL,
+             get() {
+                return isBefore(this.date, new Date()); // se horario ja passou return true ou false
+             }
+          },
+          cancelable: {
+            type: Sequelize.VIRTUAL,
+            get(){  // retorna true se não passou do horario de cancelar - pode ser cancelado até 30min antes
+                return isBefore(new Date(), subHours(this.date, 2));// tira da hora atual, 2 horas, se ainda , se a hora agendada ainda não for menor, return true, ainda da para cancelar
+            }
+          }
       },
       {
         sequelize,
