@@ -1,4 +1,5 @@
-﻿import nodemailer from 'nodemailer';
+﻿/**Esse arquivo contem as configurações de envio de email do nodemailer */
+import nodemailer from 'nodemailer';
 import mailConfig from '../config/mail';
 import { resolve } from 'path'; // usado para indicar endereço de diretorios
 import exphbs from 'express-handlebars'; // uso de templates
@@ -41,9 +42,9 @@ class Mail {
 
     sendMail(message){
       return this.transporter.sendMail({
-          ... mailConfig.default,// ... (adiciona tudo que tiver dentro de mailConfig.default
-          ... message,           //  no corpa da funcao  transporter)
-      })
+          ...mailConfig.default,// ... (adiciona tudo que tiver dentro de mailConfig.default
+          ...message,           //  no corpa da funcao  transporter)
+      });
     }
   }
 
