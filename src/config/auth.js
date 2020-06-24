@@ -1,5 +1,5 @@
-﻿// esse arquivo armazena dados da parte de configuração token
+﻿// esse arquivo armazena dados de parte de configuração do token
 export default {
-  secret:'87e068b71cceab5b5ee71a3570fb9a7d',
+  secret: process.env.APP_SECRET,
   expiresIn: '7d',
 };

@@ -1,10 +1,12 @@
-﻿module.exports = {
+﻿require('dotenv/config')
+
+module.exports = {
    dialect: 'postgres',
-   host: 'localhost',
-   username: 'postgres',
-   password:'docker',
-   database: 'belez',
-   port: 5433,
+   host: process.env.DB_HOST,
+   username: process.env.DB_USER,
+   password: process.env.DB_PASS,
+   database: process.env.DB_NAME,
+   port: process.env.DB_PORT,
    define: {
      timestamps: true, // armazena a data de criação e edição dos registros
      underscored: true, // usar undescor em nome de tabelas

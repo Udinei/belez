@@ -3,6 +3,7 @@
  * da fila sem interfirir na app, pode ser executado em outro servidor
  * e deve ser executao: yarn
  */
+import 'dotenv/config';
 import Queue from './lib/Queue';
 
 Queue.processQueue();

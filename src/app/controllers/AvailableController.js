@@ -6,7 +6,7 @@ import {
   setMinutes, setSeconds, format, isAfter
 } from 'date-fns';
 import Appointment from '../models/Appointments';
-import { Op, DataTypes } from 'sequelize';
+import { Op } from 'sequelize';
 
 class AvailableController {
 
