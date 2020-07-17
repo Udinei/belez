@@ -2,6 +2,7 @@
 
 import express from 'express';
 import path from 'path';
+import cors from 'cors';
 import Youch from 'youch';
 import * as Sentry from '@sentry/node';
 import 'express-async-errors';
@@ -26,6 +27,7 @@ class App {
     // registra todos os middlewares da app
     middlewares(){
        this.server.use(Sentry.Handlers.requestHandler()); // config. monitoração de erros via site na web
+       this.server.use(cors()); // permite qualquer endereco acessar a aplicação (dev)
        this.server.use(express.json()); // permite usar estruturas de dados json no express
        this.server.use('/files',
        express.static(path.resolve(__dirname, '..', 'tmp', 'uploads' ))

@@ -1,10 +1,12 @@
 ﻿import * as Yup from 'yup' // importando framewok de validação
-import { format, startOfHour, getMinutes, parseISO, isBefore, subHours } from 'date-fns';
+import { format } from 'date-fns-tz';
+import { startOfHour, getYear, getMonth, getDay, getHours, getMinutes, getSeconds, parseISO, isBefore, subHours, getHours, getSeconds } from 'date-fns';
 import pt from 'date-fns/locale/pt'
 import User from '../models/User';
 import File from '../models/File';
 import Appointment from '../models/Appointments';
 import Notification from '../schemas/Notification';
+
 
 import CancellationMail from '../jobs/CancellationMail';
 import Queue from '../../lib/Queue';
@@ -39,27 +41,26 @@ class AppointmentsController {
     });
 
     return res.json(appointments);
-
   }
 
   async store(req, res) {
-
-    //console.log('dd' + provider_id);
-    //console.log('ee' + date);
-
+    // informa os dados obrigatorios a serem enviados na requisição
     const schema = Yup.object().shape({
       provider_id: Yup.number().required(),
       date: Yup.date().required(),
     });
 
 
+    // Verifica se os dados obrigatorios, provedor_id e date(data de agendamento)
+    // foram enviados na requisição para fazer o agendamento
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'validation fails' });
     }
 
+    // obtem da requisição o provedor e a data desejada para agendamento
     const { provider_id, date } = req.body;
 
-    // verifica se existe um provider com o provider_id (paramentro)
+    // verifica se o usuario de id informado é um provedor de serviço
     const checkIsProvider = await User.findOne({
       where: { id: provider_id, provider: true },
     });
@@ -72,7 +73,6 @@ class AppointmentsController {
         .json({ error: 'Você não pode criar um agendamento como prestador de serviço' });
     }
 
-
     // pega a data somente com o inicio da hora (sem minuto e segundo)
     const hourStart = startOfHour(parseISO(date));
     const minutos = getMinutes(new Date(date))
@@ -82,10 +82,25 @@ class AppointmentsController {
       return res.status(400).json({ error: 'Agendamentos são permitidos a cada 30 minutos' })
     }
 
-    // se a data for menor que a data atual
-    if (isBefore(hourStart, new Date())) {
+    // options - para uso do com toLocaleDateString e timezone
+    const options = {
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+      timeZone: 'America/Campo_Grande'
+    };
+
+    /** tzHoje - data com time zone */
+    const tzDate = new Date().toLocaleDateString("pt-BR", options);
+    const array = tzDate.split(" ");
+    const tzHoje = array[0] + "T" + array[1] + ".000Z";
+
+    console.log("horastart e new data", hourStart, new Date(tzHoje));
+
+    // hourStart - data desejada de agendamento, exibe msg se for menor que a data atual
+    if (isBefore(hourStart, new Date(tzHoje))) {
       return res.status(400).json({ error: 'Não é permitido datas passadas' })
     }
+
     // verifica no BD se a data esta disponivel
     const checkAvailability = await Appointment.findOne({
       where: {
@@ -123,11 +138,13 @@ class AppointmentsController {
       user: provider_id,
     });
 
+    console.log("agemdamentos", appointments);
     return res.json(appointments);
   }
 
+  // esse metodo não deleta o registro, ele preenche o campo canceled_at
+  // com a data que foi cancelado o agendamento
   async delete(req, res) {
-
     const appointment = await Appointment.findByPk(req.params.id, {
       include: [
         {
@@ -170,7 +187,7 @@ class AppointmentsController {
     // adicionando o agendadmento a fila Cancellation para controle do redis
     // o seu processamento
     await Queue.add(CancellationMail.key, {
-        appointment,
+      appointment,
     });
 
     // retorna o agendamento cancelado

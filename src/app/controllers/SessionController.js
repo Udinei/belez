@@ -2,12 +2,13 @@
 import * as Yup from 'yup';
 
 import User from '../models/User';
+import File from '../models/File';
 import authConfig from '../../config/auth'
 
 class SessionController {
   async store(req, res){
 
-    // criando schema para validando dos campos do user
+    // criando schema para validar campos do user
     const schema = Yup.object().shape({
       email: Yup.string().email().required(),
       password: Yup.string().required()
@@ -20,8 +21,18 @@ class SessionController {
 
     const { email, password } = req.body;
 
-    // obtem usuario com o email passado do bd
-    const user = await User.findOne({ where: { email }});
+    // busca usuario com o email passado como parametro, que possua
+    // o avatar(File) passado no include
+    const user = await User.findOne({
+      where: { email },
+      include: [ // include - retorna dados de um relacionamento
+      {
+        model: File,
+        as: 'avatar',
+        attributes: ['id', 'path', 'url'],
+      }
+    ]
+   });
 
     // valida se o usuario existe
     if(!user){
@@ -33,7 +44,7 @@ class SessionController {
       return res.status(401).json({ error: 'Password does not match' });
     }
 
-    const { id, name } = user; // obtem id e nome do user
+    const { id, name, avatar, provider } = user; // obtem id e nome do user
 
     // retorna os dados do usuario mais o token
     return res.json({
@@ -41,6 +52,8 @@ class SessionController {
         id,
         name,
         email,
+        provider,
+        avatar,
       },
       token: jwt.sign({ id }, authConfig.secret, {
         expiresIn: authConfig.expiresIn

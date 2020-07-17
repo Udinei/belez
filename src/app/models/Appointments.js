@@ -7,7 +7,7 @@ class Appointments extends Model {
       {
           date: Sequelize.DATE,
           canceled_at: Sequelize.DATE,
-          past: { // false se horario ja passou
+          past: { // nao sera gravado em banco, campo calculado com base na data atual(today), sera false se horario ja passou
              type: Sequelize.VIRTUAL,
              get() {
                 return isBefore(this.date, new Date()); // se horario ja passou return true ou false
@@ -18,7 +18,8 @@ class Appointments extends Model {
             get(){  // retorna true se não passou do horario de cancelar - pode ser cancelado até 30min antes
                 return isBefore(new Date(), subHours(this.date, 2));// tira da hora atual, 2 horas, se ainda , se a hora agendada ainda não for menor, return true, ainda da para cancelar
             }
-          }
+          },
+
       },
       {
         sequelize,
