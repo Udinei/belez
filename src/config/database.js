@@ -1,4 +1,6 @@
-﻿require('dotenv/config')
+﻿/** file de credenciais de BD e configuração, acessado pela aplicação e pelo sequelize */
+
+require('dotenv/config')
 
 module.exports = {
   dialect: 'postgres',

@@ -1,6 +1,69 @@
 # belez
 Executando app back-end
 
+## instalando o Sequelize (ORM)
+`yarn add sequelize`
+
+## instalando o CLI interface de linha de comando do Sequelize (ORM) em desenvolvimento
+`yarn add sequelize-cli -D`
+
+## Configurando o sequelize.
+Criado arquivo .sequelizerc na raiz do projeto com o conteudo abaixo de acesso ao BD.
+
+const { resolve } = require('path');
+
+module.exports = {
+  config : resolve( __dirname, 'src', 'config', 'database.js'),
+  'models-path' : resolve( __dirname, 'src', 'app', 'models'),
+  'migrations-path' : resolve (__dirname, 'src', 'database', 'migrations'),
+  'seeders-path' : resolve( __dirname, 'src', 'database', 'seeds')
+};
+
+## instalando as dependencias pg e pg-store usadas pelo dialect do postgres
+`yarn add pg pg-store`
+
+## criando migrations de usuarios
+`yarn sequelize migration:create --name=create-users`
+
+O comando acima vai gerar dentro da pasta migrations um arquivo com um nome de prefixo numerico aleatorio e o sufixo -create-users
+
+## Rodando migrate com sequelize para gerar as tabela no BD
+`yarn sequelize db:migrate`
+
+Sera criado também a tabela SequelizeMeta que ira conter todas
+as migrations que o banco ja rodou. Os comandos abaixo desfaz a migrations do BD:
+`yarn sequelize db:migrate:undo` - desfaz a ultima migration executada no bd
+
+`yarn sequelize db:migrate:undo:all` - desfaz toda as migrations executadas do bd
+
+## Rodando migrations no heroku (produção)
+`heroku run sequelize db:migrate --app belez-api`
+
+## Criado o file config.json em config para uso em produção
+As dependencias do sequelize devem ser instaladas como dependencias
+de produção no package.json:
+
+     "sequelize": "^5.21.10",
+    "sequelize-cli": "^5.5.1",
+~~~
+{
+  "development": {
+    "database": "projectdb",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "database": "projectdb",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL"
+  }
+}
+~~~
+
+
 # Apos git clone para atualizar o node_modules usar:
 `yarn`
 
@@ -51,3 +114,15 @@ web: yarn start
 # configurando o MongoDB no heroku
 Referência:
 https://www.youtube.com/watch?v=2E8eWUHJaNg
+
+# Matando processo no windows rodando na <porta>
+`netstat -a -n -o | findstr <porta>`
+
+Matando o processo <pid>:
+`Taskkill /PID <pid> /F`
+
+# visualizando logs da app no heroku
+ `heroku logs --tail --app belez-api`
+
+# Conectando ao postgres no heroku via Postbird
+`<URI_do_postgres_no_heroku>?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory

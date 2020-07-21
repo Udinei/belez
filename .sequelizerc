@@ -1,4 +1,7 @@
-﻿const { resolve } = require('path');
+﻿// file de exports dos caminhos de arquivos e pastas dentro da app
+// usados pelo sequelize
+
+const { resolve } = require('path');
 
 module.exports = {
   config : resolve( __dirname, 'src', 'config', 'database.js'),
