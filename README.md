@@ -101,6 +101,12 @@ Comando docker para startar as imagens (no terminal):
 Pagina de referência:
 https://medium.com/jaguaribetech/utilizando-heroku-postgres-nas-aplica%C3%A7%C3%B5es-ruby-on-rails-8ec6a382ab2f
 
+## configuração de variaveis de ambiente
+site do heroku em: dasboard.heroku.com/apps/nomeapp/settings
+> Reveal Config Vars
+
+Nota: Todas as variaveis de ambiente do arquivo `.env` devem ser setadas com os valores gerados pelo heroku para acesso banco de dados.
+
 ## Instalação do Heroku CLI - ver site abaixo:
 https://devcenter.heroku.com/articles/heroku-cli
 
@@ -143,3 +149,7 @@ Matando o processo <pid>:
 
 # Conectando ao postgres no heroku via Postbird
 `<URI_do_postgres_no_heroku>?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+
+
+# Dicas
+`Ctrl + Shift + H` - Para buscar qualquer ocorrencia do texto dentro do projeto no VSCode
