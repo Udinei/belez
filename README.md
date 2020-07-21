@@ -36,8 +36,22 @@ as migrations que o banco ja rodou. Os comandos abaixo desfaz a migrations do BD
 
 `yarn sequelize db:migrate:undo:all` - desfaz toda as migrations executadas do bd
 
-## Rodando migrations no heroku (produção)
+## Rodando migrations no postgres do heroku (produção)
 `heroku run sequelize db:migrate --app belez-api`
+
+### Erro ao rodar o comando acima
+ERROR: there is no unique constraint matching given keys for referenced table "files"
+
+O erro acima é foi corrigido pela adição do atributo ex:
+`unique: true`
+no campo de chave primaria no caso na tabela users
+para uso correto pela migration de relacionamento ex:
+~~~
+return queryInterface.addColumn(
+      'users',
+      'avatar_id',{
+      'references': { model: 'files', key: 'id'}
+~~~
 
 ## Criado o file config.json em config para uso em produção
 As dependencias do sequelize devem ser instaladas como dependencias
@@ -67,7 +81,7 @@ de produção no package.json:
 # Apos git clone para atualizar o node_modules usar:
 `yarn`
 
-# startar images docker
+# startar images docker (dev)
 https://hub.docker.com/repository/docker/udinei/mongobelez
 https://hub.docker.com/repository/docker/udinei/postgres11
 https://hub.docker.com/repository/docker/udinei/redisbelez
@@ -77,17 +91,17 @@ Comando docker para startar as imagens (no terminal):
 - docker ps -a  (listar idcontainer das imagens)
 - docker start idcontainer
 
-# startar o processamento de filas do redis em blackground via Queue
+# startar o processamento de filas do redis em blackground via Queue (dev)
 `yarn queue`
 
-# Finalmente iniciar a app com:
+# Finalmente iniciar a app com: (dev)
  `yarn dev`
 
-## Deploy no heroku
+## Deploy no heroku (produção)
 Pagina de referência:
 https://medium.com/jaguaribetech/utilizando-heroku-postgres-nas-aplica%C3%A7%C3%B5es-ruby-on-rails-8ec6a382ab2f
 
-Instalação do Heroku CLI - ver site abaixo:
+## Instalação do Heroku CLI - ver site abaixo:
 https://devcenter.heroku.com/articles/heroku-cli
 
 Através do Heroku CLI (Command Line Interface)
@@ -108,10 +122,13 @@ Fechar o browser e continuar no terminal
 Listando base de dados postgres:
 `heroku addons | grep -i POSTGRES`
 
-Criar arquivo Procfile na raiz do projeto e inserir o conteudo abaixo:
-web: yarn start
+## Criar arquivo Procfile na raiz do projeto e inserir o conteudo abaixo:
+- start - para subir a aplicação
+- queue - start da fila do redis
 
-# configurando o MongoDB no heroku
+`web: yarn start queue`
+
+# Configurando o MongoDB no heroku
 Referência:
 https://www.youtube.com/watch?v=2E8eWUHJaNg
 
