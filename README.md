@@ -1,5 +1,8 @@
-# belez
-Executando app back-end
+## Diario de Dev
+
+## Rotas url local
+"base_url": "http://localhost:3333",
+
 
 ## instalando o Sequelize (ORM)
 `yarn add sequelize`
@@ -81,6 +84,9 @@ de produção no package.json:
 # Apos git clone para atualizar o node_modules usar:
 `yarn`
 
+# belez
+Executando app back-end
+
 # startar images docker (dev)
 https://hub.docker.com/repository/docker/udinei/mongobelez
 https://hub.docker.com/repository/docker/udinei/postgres11
@@ -96,6 +102,22 @@ Comando docker para startar as imagens (no terminal):
 
 # Finalmente iniciar a app com: (dev)
  `yarn dev`
+
+ ## Configuração do Redis
+ ~~~
+ export default {
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+  password: process.env.REDIS_PASSWORD,
+};
+~~~
+no file .env
+~~~
+# Redis
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+REDIS_PASSWORD=
+~~~
 
 ## Deploy no heroku (produção)
 Pagina de referência:
@@ -134,6 +156,7 @@ Listando base de dados postgres:
 
 `web: yarn start queue`
 
+
 # Configurando o MongoDB no heroku
 Referência:
 https://www.youtube.com/watch?v=2E8eWUHJaNg
@@ -151,5 +174,8 @@ Matando o processo <pid>:
 `<URI_do_postgres_no_heroku>?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
 
 
-# Dicas
+# Dicas VSCode
 `Ctrl + Shift + H` - Para buscar qualquer ocorrencia do texto dentro do projeto no VSCode
+
+## Referências
+http://revistapensar.com.br/tecnologia/pasta_upload/artigos/a95.pdf

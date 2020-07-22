@@ -93,7 +93,12 @@ class AppointmentsController {
     const tzDate = new Date().toLocaleDateString("pt-BR", options);
     const array = tzDate.split(" ");
     const tzHoje = array[0] + "T" + array[1] + ".000Z";
+    const tzHojeSemZ = array[0] + "T" + array[1] + ".000";
 
+    console.log("tzHoje sem Z",    new Date(tzHojeSemZ));
+    console.log("tzDate cru", tzDate);
+    console.log("tzDate Hoje", tzHoje);
+    console.log("my new date", new Date());
     console.log("horastart e new data", hourStart, new Date(tzHoje));
 
     // hourStart - data desejada de agendamento, exibe msg se for menor que a data atual
