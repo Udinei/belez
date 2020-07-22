@@ -2,7 +2,7 @@
     somente se estiver em ambiente de produção
     Nota: se o erro:  Ready check failed: NOAUTH Authentication required, for
     exibido no log, aguardar, pois o servidor heroku ira restartar a aplicação */
-    const ambiente = () => {
+async function ambiente() {
   if (process.env.NODE_ENV !== 'development') {
     return {
       host: process.env.REDIS_HOST,
