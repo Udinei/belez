@@ -1,17 +1,27 @@
 ﻿/** retorna a propriedade password para a configuração do Redis
-    somente se estiver em ambiente de produção */
+    somente se estiver em ambiente de produção
+    Nota: se o erro:  Ready check failed: NOAUTH Authentication required, for
+    exibido no log, aguardar, pois o servidor heroku ira restartar a aplicação */
 const ambiente = () => {
-  if (process.env.NODE_ENV !== 'development')
-      return 'password: process.env.REDIS_PASSWORD';
-      return '';
+  if (process.env.NODE_ENV !== 'development') {
+    return {
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
+    }
+  } else {
+    return {
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
+      password: process.env.REDIS_PASSWORD,
+    }
+  }
 };
 
-const password_ = ambiente();
+// executa a funcao
+const configRedis = ambiente();
 
 export default {
-  host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT,
-  password_
+  configRedis
 };
 
 

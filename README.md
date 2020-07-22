@@ -123,11 +123,17 @@ REDIS_PASSWORD=
 Pagina de referência:
 https://medium.com/jaguaribetech/utilizando-heroku-postgres-nas-aplica%C3%A7%C3%B5es-ruby-on-rails-8ec6a382ab2f
 
+# GERÊNCIA DE CONFIGURAÇÃO
 ## configuração de variaveis de ambiente
+Nota: Ao adicionar ou excluir uma variavel de ambiente o heroku restarta a aplicação
+
 site do heroku em: dasboard.heroku.com/apps/nomeapp/settings
 > Reveal Config Vars
 
 Nota: Todas as variaveis de ambiente do arquivo `.env` devem ser setadas com os valores gerados pelo heroku para acesso banco de dados.
+
+## Configuração timeZone no Heroku
+`heroku config:add TZ=America/Campo_Grande --app belez-api`
 
 ## Instalação do Heroku CLI - ver site abaixo:
 https://devcenter.heroku.com/articles/heroku-cli
@@ -161,21 +167,30 @@ Listando base de dados postgres:
 Referência:
 https://www.youtube.com/watch?v=2E8eWUHJaNg
 
-# Matando processo no windows rodando na <porta>
+## Matando processo no windows rodando na <porta>
 `netstat -a -n -o | findstr <porta>`
 
 Matando o processo <pid>:
 `Taskkill /PID <pid> /F`
 
-# visualizando logs da app no heroku
+## visualizando logs da app no heroku
  `heroku logs --tail --app belez-api`
 
-# Conectando ao postgres no heroku via Postbird
+## Conectando ao postgres no heroku via Postbird
 `<URI_do_postgres_no_heroku>?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
 
 
-# Dicas VSCode
+# Dicas Geral
+## VSCode
 `Ctrl + Shift + H` - Para buscar qualquer ocorrencia do texto dentro do projeto no VSCode
 
+## Arrow functions
+https://2ality.com/2012/04/arrow-functions.html
+
+~~~
+   () => { ... } // no argument
+   x => { ... } // one argument
+   (x, y) => { ... } // several arguments
+~~~
 ## Referências
 http://revistapensar.com.br/tecnologia/pasta_upload/artigos/a95.pdf

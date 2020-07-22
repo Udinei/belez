@@ -60,14 +60,16 @@ class AppointmentsController {
     // obtem da requisição o provedor e a data desejada para agendamento
     const { provider_id, date } = req.body;
 
-    // verifica se o usuario de id informado é um provedor de serviço
+
     const checkIsProvider = await User.findOne({
       where: { id: provider_id, provider: true },
     });
 
     // TODO: O usuario prestador de serviço nao pode agender um serviço pra si proprio
 
-    // se usuario nao for um prestador de servico
+
+     // verifica se o usuario de id informado que esta tentando cadastrar uma agendamento
+     // é um provedor de serviço, se usuario nao for um prestador de servico
     if (!checkIsProvider) {
       return res.status(401)
         .json({ error: 'Você não pode criar um agendamento como prestador de serviço' });
@@ -86,6 +88,7 @@ class AppointmentsController {
     const options = {
       year: 'numeric', month: '2-digit', day: '2-digit',
       hour: '2-digit', minute: '2-digit', second: '2-digit',
+      hour12: false,
       timeZone: 'America/Campo_Grande'
     };
 
@@ -95,6 +98,7 @@ class AppointmentsController {
     const tzHoje = array[0] + "T" + array[1] + ".000Z";
     const tzHojeSemZ = array[0] + "T" + array[1] + ".000";
 
+    console.log("tzDate cru", tzDate);
     console.log("tzHoje sem Z",    new Date(tzHojeSemZ));
     console.log("tzDate cru", tzDate);
     console.log("tzDate Hoje", tzHoje);
@@ -115,7 +119,7 @@ class AppointmentsController {
       },
     });
 
-    // se data de agendamento nao disponivel
+    // se data de agendamento encontrada, horario nao disponivel
     if (checkAvailability) {
       return res.status(400).json({ error: 'Agendamento para esse dia e horario não esta disponivel' });
     }
