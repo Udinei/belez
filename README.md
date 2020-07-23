@@ -39,8 +39,25 @@ as migrations que o banco ja rodou. Os comandos abaixo desfaz a migrations do BD
 
 `yarn sequelize db:migrate:undo:all` - desfaz toda as migrations executadas do bd
 
-## Rodando migrations no postgres do heroku (produção)
+## Preparando o projeto para enviar para (PRODUÇÃO)
+Adicionado os script build e start no package.json, que será executado automaticamente
+pelo heroku, para gerar a pasta /dist
+
+- sucrase gera o projeto para distribuição dist, informando que esta usando imports
+ em vez de require(..) no projeto
+~~~
+"build": "sucrase ./src -d ./dist --transforms imports",
+"start": "node dist/server.js"
+~~~
+
+## Rodando migrations no postgres do heroku (PRODUÇÃO)
 `heroku run sequelize db:migrate --app belez-api`
+
+As dependencias do sequelize devem ser instaladas como dependencias
+de produção no package.json:
+
+    "sequelize": "^5.21.10",
+    "sequelize-cli": "^5.5.1",
 
 ### Erro ao rodar o comando acima
 ERROR: there is no unique constraint matching given keys for referenced table "files"
@@ -49,6 +66,7 @@ O erro acima é foi corrigido pela adição do atributo ex:
 `unique: true`
 no campo de chave primaria no caso na tabela users
 para uso correto pela migration de relacionamento ex:
+
 ~~~
 return queryInterface.addColumn(
       'users',
@@ -56,12 +74,9 @@ return queryInterface.addColumn(
       'references': { model: 'files', key: 'id'}
 ~~~
 
-## Criado o file config.json em config para uso em produção
-As dependencias do sequelize devem ser instaladas como dependencias
-de produção no package.json:
+## Criado o arquivo config.json na pasta config para uso em produção
+Conteudo:
 
-     "sequelize": "^5.21.10",
-    "sequelize-cli": "^5.5.1",
 ~~~
 {
   "development": {
@@ -81,13 +96,17 @@ de produção no package.json:
 ~~~
 
 
-# Apos git clone para atualizar o node_modules usar:
+
+
+# Instalação da aplicação no AWS da amazon ou na maquina local
+
+
+## Executando app back-end
+Nota: Apos usar git clone para baixar o projeto,
+ executar o comando abaixo para atualizar o node_modules :
 `yarn`
 
-# belez
-Executando app back-end
-
-# startar images docker (dev)
+## startar images docker (dev)
 https://hub.docker.com/repository/docker/udinei/mongobelez
 https://hub.docker.com/repository/docker/udinei/postgres11
 https://hub.docker.com/repository/docker/udinei/redisbelez

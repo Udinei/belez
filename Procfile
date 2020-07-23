@@ -1,1 +1,3 @@
-﻿web: yarn start queue
+﻿web: yarn queue_
+web: yarn start
+
