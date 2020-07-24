@@ -105,9 +105,10 @@ class AppointmentsController {
 
     console.log(".......horaStart", hourStart);
     console.log("..........dateHojeFormatada e horas", dateHoje+tzHora+".000Z");
-    console.log(".......form", hourStart);
+    console.log(".......form", form);
 
     const dateHojeFormatada = dateHoje+tzHora+".000Z";
+    console.log(".......dateHojeFormatada", dateHojeFormatada);
 
     // hourStart - data desejada de agendamento, exibe msg se for menor que a data atual
     if (isBefore(hourStart, new Date(dateHojeFormatada))) {

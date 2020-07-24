@@ -15,7 +15,7 @@ console.log("senha do redis: ", password_);
 export default {
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
-  password: process.env.REDIS_PASSWORD, // incluir essa somente quando subir para o heroku
+  //password: process.env.REDIS_PASSWORD, // incluir essa somente quando subir para o heroku
 };
 
 
