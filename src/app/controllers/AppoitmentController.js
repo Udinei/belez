@@ -87,11 +87,27 @@ class AppointmentsController {
       return res.status(400).json({ error: 'Agendamentos são permitidos a cada 30 minutos' })
     }
 
-    // formata a data atual para comparação com a data desejada de agendamento, enviada na requisição
-    var dateHojeFormatada = format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'.000Z'");
-    console.log(".......horaStart", hourStart);
-    console.log("..........dateHojeFormatada", dateHojeFormatada);
+        // options - para uso do com toLocaleDateString e timezone	    // formata a data atual para comparação com a data desejada de agendamento, enviada na requisição
+        const options = {
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        hour12: false,
+        timeZone: 'America/Campo_Grande'
+      };
 
+      /** tzHoje - data com time zone */
+      const tzDate = new Date().toLocaleDateString("pt-BR", options);
+      const tzHora = tzDate.split(" ")[1];
+      const form = "yyyy-MM-dd'T'";
+      var dateHoje = format(new Date(), form);
+
+    // formata a data atual para comparação com a data desejada de agendamento, enviada na requisição
+
+    console.log(".......horaStart", hourStart);
+    console.log("..........dateHojeFormatada e horas", dateHoje+tzHora+".000Z");
+    console.log(".......form", hourStart);
+
+    const dateHojeFormatada = dateHoje+tzHora+".000Z";
 
     // hourStart - data desejada de agendamento, exibe msg se for menor que a data atual
     if (isBefore(hourStart, new Date(dateHojeFormatada))) {
