@@ -89,7 +89,8 @@ class AppointmentsController {
 
     // formata a data atual para comparação com a data desejada de agendamento, enviada na requisição
     var dateHojeFormatada = format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'.000Z'");
-
+    console.log("horaStart", hourStart);
+    console.log("horaStart", dateHojeFormatada);
     // hourStart - data desejada de agendamento, exibe msg se for menor que a data atual
     if (isBefore(hourStart, new Date(dateHojeFormatada))) {
       return res.status(400).json({ error: 'Não é permitido datas passadas' })
