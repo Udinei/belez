@@ -2,20 +2,20 @@
     somente se estiver em ambiente de produção
     Nota: se o erro:  Ready check failed: NOAUTH Authentication required, for
     exibido no log, aguardar, pois o servidor heroku ira restartar a aplicação */
-const ambiente = () => {
-  if (process.env.NODE_ENV !== 'development')
+const ambiente = async () => {
+   if (process.env.NODE_ENV !== 'development')
       return 'password: process.env.REDIS_PASSWORD';
       return '';
 }
 
 // executa a funcao
-const password_ = ambiente();
-console.log("senha do redis: ", password_);
+const password_ =  ambiente();
+console.log("..... redis password : ", password_);
 
-export default {
+ export default  {
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
-  //password: process.env.REDIS_PASSWORD, // incluir essa somente quando subir para o heroku
+  password_  // incluir essa somente quando subir para o heroku
 };
 
 

@@ -87,7 +87,8 @@ class AppointmentsController {
       return res.status(400).json({ error: 'Agendamentos são permitidos a cada 30 minutos' })
     }
 
-        // options - para uso do com toLocaleDateString e timezone	    // formata a data atual para comparação com a data desejada de agendamento, enviada na requisição
+        // opções de geração da data atual para comparação com a data desejada de agendamento,
+        // enviada na requisição, a data sera criada com toLocaleDateString
         const options = {
         year: 'numeric', month: '2-digit', day: '2-digit',
         hour: '2-digit', minute: '2-digit', second: '2-digit',
@@ -95,23 +96,21 @@ class AppointmentsController {
         timeZone: 'America/Campo_Grande'
       };
 
-      /** tzHoje - data com time zone */
+      /** tzHoje - data com time zone, foi necessario criar e formatar a data atual
+       * conforme o bloco de codigo abaixo, tendo em vista o servidor(heroku-EUA)
+       *  criar a data com new Date, com o horario local do servidor, provocando
+       * inconsistencia no horario do agendamento que esta em BR
+      */
       const tzDate = new Date().toLocaleDateString("pt-BR", options);
-      const tzHora = tzDate.split(" ")[1];
-      const form = "yyyy-MM-dd'T'";
-      var dateHoje = format(new Date(tzDate), form);
+      const tzHora = tzDate.split(" ")[1]; // obtem somente o horario da data gerada
 
-    // formata a data atual para comparação com a data desejada de agendamento, enviada na requisição
+      const form = "yyyy-MM-dd'T'"; // formato que sera a data
+      var dateHoje = format(new Date(tzDate), form); // recria a data de hoje com o horario do brasil
 
-    console.log(".......horaStart", hourStart);
-    console.log("..........dateHojeFormatada e horas", dateHoje+tzHora+".000Z");
-    console.log(".......form", form);
-    console.log(".......tzDatenes date", new Date(tzDate));
+     // para comparação com a data desejada de agendamento, acresenta milisegundos e Zona
+     const dateHojeFormatada = dateHoje+tzHora+".000Z";
 
-    const dateHojeFormatada = dateHoje+tzHora+".000Z";
-    console.log(".......dateHojeFormatada", dateHojeFormatada);
-
-    // hourStart - data desejada de agendamento, exibe msg se for menor que a data atual
+    // hourStart - data desejada de agendamento, exibe msg se a data e o horario for menor que o momento atual
     if (isBefore(hourStart, new Date(dateHojeFormatada))) {
       return res.status(400).json({ error: 'Não é permitido datas passadas' })
     }
