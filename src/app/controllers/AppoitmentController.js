@@ -1,6 +1,6 @@
 ﻿import * as Yup from 'yup' // importando framewok de validação
 import { format } from 'date-fns-tz';
-import { startOfHour, getYear, getMonth, getDay, getHours, getMinutes, getSeconds, parseISO, isBefore, subHours, getHours, getSeconds } from 'date-fns';
+import { startOfHour,  getMinutes, parseISO, isBefore, subHours } from 'date-fns';
 import pt from 'date-fns/locale/pt'
 import User from '../models/User';
 import File from '../models/File';

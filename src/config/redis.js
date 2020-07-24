@@ -2,13 +2,20 @@
     somente se estiver em ambiente de produção
     Nota: se o erro:  Ready check failed: NOAUTH Authentication required, for
     exibido no log, aguardar, pois o servidor heroku ira restartar a aplicação */
-/*const ambiente = () => {
+/*
+TODO: Ao tentar executar a funcao abaixo o O erro:
+This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). The promise rejected with the reason:
+ReplyError: Ready check failed: NOAUTH Authentication required.
+ver possivel SOLUÇÃO nos sites:
+   https://medium.com/@JonasJancarik/handling-those-unhandled-promise-rejections-when-using-javascript-async-await-and-ifee-5bac52a0b29f
+   https://medium.com/@programadriano/utilizando-cache-com-redis-mongodb-e-node-js-8b3d6461b966
+Solução paliativa: Comentar a linha da senha ao executar localmente o redis
+const ambiente = () => {
   if (process.env.NODE_ENV !== 'development')
     return 'password: process.env.REDIS_PASSWORD';
     return '';
 
 }*/
-
 
 // executa a funcao
 //const password_ = ambiente();
@@ -17,8 +24,9 @@
 export default {
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
+  // a linha abaixo sera incluida somente quando subir para o heroku
   password: process.env.REDIS_PASSWORD
-  //password_   // essa linha sera incluida somente quando subir para o heroku
+
 };
 
 
