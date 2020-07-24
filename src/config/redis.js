@@ -10,11 +10,12 @@ const ambiente = () => {
 
 // executa a funcao
 const password_ = ambiente();
+console.log("senha do redis: ", password_);
 
 export default {
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
-  password: process.env.REDIS_PASSWORD,
+ // password: process.env.REDIS_PASSWORD, // incluir essa somente quando subir para o heroku
 };
 
 

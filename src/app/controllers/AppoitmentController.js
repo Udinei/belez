@@ -43,6 +43,7 @@ class AppointmentsController {
     return res.json(appointments);
   }
 
+  // criar um agendamento
   async store(req, res) {
     // informa os dados obrigatorios a serem enviados na requisição
     const schema = Yup.object().shape({
@@ -68,15 +69,17 @@ class AppointmentsController {
     // TODO: O usuario prestador de serviço nao pode agender um serviço pra si proprio
 
 
-     // verifica se o usuario de id informado que esta tentando cadastrar uma agendamento
-     // é um provedor de serviço, se usuario nao for um prestador de servico
+    // verifica se o usuario de id informado que esta tentando cadastrar uma agendamento
+    // é um provedor de serviço, se usuario nao for um prestador de servico
     if (!checkIsProvider) {
       return res.status(401)
         .json({ error: 'Você não pode criar um agendamento como prestador de serviço' });
     }
 
     // pega a data somente com o inicio da hora (sem minuto e segundo)
-    const hourStart = startOfHour(parseISO(date));
+    //const hourStart = startOfHour(parseISO(date));
+
+    const hourStart = parseISO(date);
     const minutos = getMinutes(new Date(date))
 
     // valida se o agendamento e de meia hora ou hora cheia
@@ -84,31 +87,11 @@ class AppointmentsController {
       return res.status(400).json({ error: 'Agendamentos são permitidos a cada 30 minutos' })
     }
 
-    // options - para uso do com toLocaleDateString e timezone
-    const options = {
-      year: 'numeric', month: '2-digit', day: '2-digit',
-      hour: '2-digit', minute: '2-digit', second: '2-digit',
-      hour12: false,
-      timeZone: 'America/Campo_Grande'
-    };
-
-    /** tzHoje - data com time zone */
-    const tzDate = new Date().toLocaleDateString("pt-BR", options);
-    const tzDate1 = (new Date).toLocaleDateString("pt-BR", options);
-    const array = tzDate.split(" ");
-    const tzHoje = array[0] + "T" + array[1] + ".000Z";
-    const tzHojeSemZ = array[0] + "T" + array[1] + ".000";
-
-    console.log("tzDate1 cru", tzDate1);
-    console.log("tzDate cru", tzDate);
-    console.log("tzHoje sem Z",    new Date(tzHojeSemZ));
-    console.log("tzDate cru", tzDate);
-    console.log("tzDate Hoje", tzHoje);
-    console.log("my new date", new Date());
-    console.log("horastart e new data", hourStart, new Date(tzHoje));
+    // formata a data atual para comparação com a data desejada de agendamento, enviada na requisição
+    var dateHojeFormatada = format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'.000Z'");
 
     // hourStart - data desejada de agendamento, exibe msg se for menor que a data atual
-    if (isBefore(hourStart, new Date(tzHoje))) {
+    if (isBefore(hourStart, new Date(dateHojeFormatada))) {
       return res.status(400).json({ error: 'Não é permitido datas passadas' })
     }
 
