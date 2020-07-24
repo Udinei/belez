@@ -99,13 +99,14 @@ class AppointmentsController {
       const tzDate = new Date().toLocaleDateString("pt-BR", options);
       const tzHora = tzDate.split(" ")[1];
       const form = "yyyy-MM-dd'T'";
-      var dateHoje = format(tzDate, form);
+      var dateHoje = format(new Date(tzDate), form);
 
     // formata a data atual para comparação com a data desejada de agendamento, enviada na requisição
 
     console.log(".......horaStart", hourStart);
     console.log("..........dateHojeFormatada e horas", dateHoje+tzHora+".000Z");
     console.log(".......form", form);
+    console.log(".......tzDatenes date", new Date(tzDate));
 
     const dateHojeFormatada = dateHoje+tzHora+".000Z";
     console.log(".......dateHojeFormatada", dateHojeFormatada);
