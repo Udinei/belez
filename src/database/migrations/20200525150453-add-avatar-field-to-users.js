@@ -13,6 +13,7 @@ module.exports = {
       });
     },
 
+  // se fizer rollback esse queryinterface sera executado
   down: queryInterface => {
     return queryInterface.removeColumn('users', 'avatar_id');
   },

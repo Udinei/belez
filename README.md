@@ -1,5 +1,26 @@
 ## Diario de Dev
 
+
+## Startando a aplicação em ambiente de DEV
+Pré-requisitos: </br>
+Ter as imagens docker dos bancos mongoDB, postgres11 e rediz já criadas, e instaladas
+no hub.docker.
+- Startar as images docker (dev) </br>
+https://hub.docker.com/repository/docker/udinei/mongobelez </br>
+https://hub.docker.com/repository/docker/udinei/postgres11 </br>
+https://hub.docker.com/repository/docker/udinei/redisbelez </br>
+
+Comando docker para startar as imagens (no terminal): </br>
+- `docker ps` (constainer que estão executando)
+- `docker ps -a`  (listar idcontainer das imagens)
+- `docker start idcontainer`
+
+Startar o processamento de filas do redis em blackground via Queue (dev) </br>
+`yarn queue`
+
+Iniciar a app com: (dev) </br>
+ `yarn dev`
+
 ## Rotas url local
 "base_url": "http://localhost:3333",
 
@@ -25,10 +46,12 @@ module.exports = {
 ## instalando as dependencias pg e pg-store usadas pelo dialect do postgres
 `yarn add pg pg-store`
 
-## criando migrations de usuarios
+## Criando migrations de usuarios
 `yarn sequelize migration:create --name=create-users`
 
-O comando acima vai gerar dentro da pasta migrations um arquivo com um nome de prefixo numerico aleatorio e o sufixo -create-users
+`yarn sequelize migration:create --name=add-avatar-field-to-users`
+
+O comando acima vai gerar dentro da pasta migrations um arquivo com um nome de prefixo numerico aleatorio e o sufixo -create-users.js
 
 ## Rodando migrate com sequelize para gerar as tabela no BD
 `yarn sequelize db:migrate`
@@ -106,22 +129,6 @@ Nota: Apos usar git clone para baixar o projeto,
  executar o comando abaixo para atualizar o node_modules :
 `yarn`
 
-## startar images docker (dev)
-https://hub.docker.com/repository/docker/udinei/mongobelez
-https://hub.docker.com/repository/docker/udinei/postgres11
-https://hub.docker.com/repository/docker/udinei/redisbelez
-
-Comando docker para startar as imagens (no terminal):
-- docker ps (constainer que estão executando)
-- docker ps -a  (listar idcontainer das imagens)
-- docker start idcontainer
-
-# startar o processamento de filas do redis em blackground via Queue (dev)
-`yarn queue`
-
-# Finalmente iniciar a app com: (dev)
- `yarn dev`
-
  ## Configuração do Redis
  ~~~
  export default {
@@ -196,6 +203,7 @@ Matando o processo <pid>:
  `heroku logs --tail --app belez-api`
 
 ## Conectando ao postgres no heroku via Postbird
+URI_do_postgres_no_heroku - Acessar o heroku para obter essa uri
 `<URI_do_postgres_no_heroku>?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
 
 
@@ -206,10 +214,11 @@ Matando o processo <pid>:
 ## Arrow functions
 https://2ality.com/2012/04/arrow-functions.html
 
+Uso básico:
 ~~~
-   () => { ... } // no argument
-   x => { ... } // one argument
-   (x, y) => { ... } // several arguments
+   () => { ... } // sem argumentos
+   x => { ... } // um argumentos
+   (x, y) => { ... } // varios argumentos
 ~~~
 ## Referências
 http://revistapensar.com.br/tecnologia/pasta_upload/artigos/a95.pdf

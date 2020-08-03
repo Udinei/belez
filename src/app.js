@@ -29,6 +29,8 @@ class App {
        this.server.use(Sentry.Handlers.requestHandler()); // config. monitoração de erros via site na web
        this.server.use(cors()); // permite qualquer endereco acessar a aplicação (dev)
        this.server.use(express.json()); // permite usar estruturas de dados json no express
+
+       // liberando ao express acesso local a arquivos estaticos
        this.server.use('/files',
        express.static(path.resolve(__dirname, '..', 'tmp', 'uploads' ))
        );

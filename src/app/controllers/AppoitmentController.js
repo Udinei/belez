@@ -18,6 +18,8 @@ class AppointmentsController {
   async index(req, res) {
     const { page = 1 } = req.query; // se valor de page nao informado inicia page com 1
 
+    console.log('passou aqui...');
+
     const appointments = await Appointment.findAll({
       where: { user_id: req.userId, canceled_at: null },
       order: ['date'],
@@ -152,7 +154,7 @@ class AppointmentsController {
       user: provider_id,
     });
 
-    console.log("agemdamentos", appointments);
+    console.log("agendamentos", appointments);
     return res.json(appointments);
   }
 

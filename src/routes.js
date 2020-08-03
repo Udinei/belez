@@ -1,10 +1,12 @@
 ﻿import { Router } from 'express';
 import multer from 'multer';
 import multerConfig from './config/multer';
+import multerConfigx from './config/multer-x';
 
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
+import FilexController from './app/controllers/FilexController';
 import authMiddleware from './app/middlewares/auth';
 import ProviderController from './app/controllers/ProviderController';
 import AppoitmentController from './app/controllers/AppoitmentController';
@@ -14,41 +16,48 @@ import AvailableController from './app/controllers/AvailableController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
+const uploadx = multer(multerConfigx);
 
-  routes.post('/users', UserController.store);
-  routes.post('/sessions', SessionController.store);
+routes.post('/users', UserController.store);
+routes.post('/sessions', SessionController.store);
 
-  // somente as rotas abaixo dessa rota vao usar o middleware (authMiddleware) de forma global (chamado sempre que uma rota for requisitado)
-  routes.use(authMiddleware);
+// somente as rotas abaixo dessa rota vao usar o middleware (authMiddleware) de forma global (chamado sempre que uma rota for requisitado)
+routes.use(authMiddleware);
 
-  // usuarios do sistema
-  routes.put('/users', UserController.update);
+// usuarios do sistema
+routes.put('/users', UserController.update);
 
-  // usuarios prestadores de servico
-  routes.get('/providers', ProviderController.index);
-  // lista todos os horarios disponiveis para o prestador de serviço especifico
-  routes.get('/providers/:providerId/available', AvailableController.index);
+// usuarios prestadores de servico
+routes.get('/providers', ProviderController.index);
 
-  // listgem de agendamentos
-  routes.get('/appoitments', AppoitmentController.index);
+// lista todos os horarios disponiveis para o prestador de serviço especifico
+routes.get('/providers/:providerId/available', AvailableController.index);
 
-  // agendamentos
-  routes.post('/appoitments', AppoitmentController.store);
+// listgem de agendamentos
+routes.get('/appoitments', AppoitmentController.index);
 
-  // cancelar agendamento
-  routes.delete('/appoitments/:id', AppoitmentController.delete);
+// agendamentos
+routes.post('/appoitments', AppoitmentController.store);
 
-  routes.get('/schedule', ScheduleController.index);
+// cancelar agendamento
+routes.delete('/appoitments/:id', AppoitmentController.delete);
 
-  routes.get('/notifications', NotificationController.index);
+routes.get('/schedule', ScheduleController.index);
 
-  // alterar a leitura das notificação
-  routes.put('/notifications/:id', NotificationController.update);
+routes.get('/notifications', NotificationController.index);
+
+// alterar a leitura das notificação
+routes.put('/notifications/:id', NotificationController.update);
+
+// trata emvio de imagens
+//routes.post('/files', upload.single('file'), FileController.store);
+routes.post('/files', uploadx.single("file"), FileController.store);
 
 
-
-  // trata emvio de imagens
-  routes.post('/files', upload.single('file'), FileController.store);
+// multer - middlware que pode carregar um arquivo a ser enviado como parametro da requisicao
+// multerConfig -
+// .single("file") - permite enviar somente um arquivo a cada requisicao
+//routes.post('/files', uploadx.single("file"), FilexController.store);
 
 
 //module.exports = routes;

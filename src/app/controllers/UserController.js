@@ -4,6 +4,7 @@ import User from '../models/User';
 import File from '../models/File';
 
 class UserController {
+
   async store(req, res) {
 
     // criando schema para validando dos campos do user
@@ -93,6 +94,7 @@ class UserController {
       if (oldPassword && !(await user.checkPassword(oldPassword))) {
          return res.status(401).json({ error: 'Password does not match' });
       }
+
 
       // realiza a alteração e obtem os dados com  destruct
       //const { id, name, provider } = await user.update(req.body);

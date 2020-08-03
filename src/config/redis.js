@@ -24,8 +24,10 @@ const ambiente = () => {
 export default {
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
-  // a linha abaixo sera incluida somente quando subir para o heroku
-  password: process.env.REDIS_PASSWORD
+  // a linha abaixo é necessaria para execução no heroku,
+  // que exige a senha nessa var. de ambiente, essa variavel esta setada no
+  // heroku
+  //password: process.env.REDIS_PASSWORD
 
 };
 
