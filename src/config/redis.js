@@ -35,8 +35,11 @@ var Redis = require("redis");
 module.exports = {
   open: function() {
     //var client = Redis.createClient(process.env.REDIS_PORT || 6379, process.env.REDIS_URL || '127.0.0.1');
-    var client = require('redis').createClient(process.env.REDIS_URL);
+    var client = require('redis').createClient(process.env.REDIS_PORT || 6379, process.env.REDIS_URL || '127.0.0.1');
     client.selected_db = 1;
+    client.on("error", function (err) {
+      console.log("Error " + err);
+  });
 
     return client;
   },
