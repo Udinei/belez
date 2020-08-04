@@ -1,2 +1,2 @@
-﻿web: yarn queue_ start
+﻿web: yarn start
 

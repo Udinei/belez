@@ -220,5 +220,13 @@ Uso básico:
    x => { ... } // um argumentos
    (x, y) => { ... } // varios argumentos
 ~~~
+
+## Erros (PRODUÇÃO)
+O erro abaixo era provocado por ausencia das variaveis de ambiente do S3
+configuradas no servidor.
+
+~~~
+Access to XMLHttpRequest at 'https://belez-api.herokuapp.com/sessions' from origin 'https://belez-web.herokuapp.com' has been blocked by CORS policy:
+~~~
 ## Referências
 http://revistapensar.com.br/tecnologia/pasta_upload/artigos/a95.pdf
