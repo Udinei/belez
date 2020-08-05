@@ -28,7 +28,7 @@ export default {
   // que exige a senha nessa var. de ambiente, essa variavel esta setada no
   // heroku
   //password: process.env.REDIS_PASSWORD
-//};
+};
 
 //var Redis = require("redis");
 /*const
