@@ -20,28 +20,28 @@ const ambiente = () => {
 // executa a funcao
 //const password_ = ambiente();
 //console.log("..... redis password : ", password_);
-const
-  redisOptions = require('./redisOptions'),
-  redis = require('redis'),
 
-export default {
+
+//export default {
 //host: process.env.REDIS_URL,
 //port: process.env.REDIS_PORT,
-
-  redisClient = redis.createClient(REDIS_URL, redisOptions)
 // a linha abaixo é necessaria para execução no heroku,
 // que exige a senha nessa var. de ambiente, essa variavel esta setada no
 // heroku
 //password: process.env.REDIS_PASSWORD
-};
+//};
 
-/*
+
 module.exports = {
   open: function () {
+    const
+    redisOptions = require('./redisOptions'),
+    redis = require('redis'),
+    client = redis.createClient(process.env.REDIS_PORT, redisOptions)
 
-    var client = require('redis').createClient(process.env.REDIS_PORT, process.env.REDIS_URL);
-    var client = require('redis').createClient(process.env.REDIS_URL);
-    .selected_db = 1;
+    //var client = require('redis').createClient(process.env.REDIS_PORT, process.env.REDIS_URL);
+    //var client = require('redis').createClient(process.env.REDIS_URL);
+    //.selected_db = 1;
 
     client.on("error", function (err) {
       console.log("Error " + err);
@@ -57,6 +57,6 @@ module.exports = {
     client.quit();
   }
 
-};*/
+};
 
 
