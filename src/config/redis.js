@@ -20,13 +20,15 @@ const ambiente = () => {
 // executa a funcao
 //const password_ = ambiente();
 //console.log("..... redis password : ", password_);
-var redis = require('redis');
-var client = redis.createClient();
-
+const
+  redisOptions = require('./redisOptions'),
+  redis = require('redis'),
 
 export default {
-host: process.env.REDIS_URL,
-port: process.env.REDIS_PORT,
+//host: process.env.REDIS_URL,
+//port: process.env.REDIS_PORT,
+
+  redisClient = redis.createClient(REDIS_URL, redisOptions)
 // a linha abaixo é necessaria para execução no heroku,
 // que exige a senha nessa var. de ambiente, essa variavel esta setada no
 // heroku
