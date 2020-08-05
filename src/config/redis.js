@@ -26,7 +26,7 @@ var client = redis.createClient();
 
 export default {
 host: process.env.REDIS_URL,
-//port: process.env.REDIS_PORT,
+port: process.env.REDIS_PORT,
 // a linha abaixo é necessaria para execução no heroku,
 // que exige a senha nessa var. de ambiente, essa variavel esta setada no
 // heroku
