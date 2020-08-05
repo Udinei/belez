@@ -35,9 +35,8 @@ const ambiente = () => {
 module.exports = {
   open: function () {
     const
-    redisOptions = require('./redisOptions'),
     redis = require('redis'),
-    client = redis.createClient(process.env.REDIS_PORT, redisOptions)
+    client = redis.createClient('redis://h:p539efb9eba05decc148ed1fe0f8987e9fe8eb1c5ec8238cbf24ad70816889ba2@ec2-52-54-229-237.compute-1.amazonaws.com:12339')
 
     //var client = require('redis').createClient(process.env.REDIS_PORT, process.env.REDIS_URL);
     //var client = require('redis').createClient(process.env.REDIS_URL);
