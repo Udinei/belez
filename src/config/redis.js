@@ -18,18 +18,27 @@ const ambiente = () => {
     return '';
 
 }*/
-
-
+/*
+if (process.env.NODE_ENV !== 'development'){}
 export default {
-host: process.env.REDIS_URL,
-port: process.env.REDIS_PORT,
-//tmp: {client}
-// a linha abaixo é necessaria para execução no heroku,
-// que exige a senha nessa var. de ambiente, essa variavel esta setada no
-// heroku
-password: process.env.REDIS_PASSWORD
-};
+  host: process.env.REDIS_URL,
+  port: process.env.REDIS_PORT,
+  password: {process.env.NODE_ENV ? '' : process.env.REDIS_PASSWORD},
+};*/
 
+if (process.env.NODE_ENV === 'development') {
+  export default {
+    host: process.env.REDIS_URL,
+    port: process.env.REDIS_PORT,
+  };
+
+} else {
+  export default {
+    host: process.env.REDIS_URL,
+    port: process.env.REDIS_PORT,
+    password: process.env.REDIS_PASSWORD,
+  };
+};
 /*
 module.exports = {
   open: function () {
