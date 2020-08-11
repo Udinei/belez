@@ -6,7 +6,7 @@ class ProviderController {
     const providers = await User.findAll({
       where: { provider: true },
       attributes: ['id', 'name', 'email', 'avatar_id'],
-      include: [  //atributos de relacionamentos
+      include: [  //estabelece relacionamento com File que armazena os dados de avatar (name, path, url, etc..) do user
         {
           model: File,
           as: 'avatar',
@@ -15,7 +15,7 @@ class ProviderController {
       ],
     });
 
-
+    console.log('provedores.....', providers);
     res.json(providers);
   }
 

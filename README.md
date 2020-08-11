@@ -140,7 +140,7 @@ Nota: Apos usar git clone para baixar o projeto,
 no file .env
 ~~~
 # Redis
-REDIS_HOST=127.0.0.1
+REDIS_URL=127.0.0.1
 REDIS_PORT=6379
 REDIS_PASSWORD=
 ~~~
@@ -206,7 +206,34 @@ Matando o processo <pid>:
 URI_do_postgres_no_heroku - Acessar o heroku para obter essa uri
 `<URI_do_postgres_no_heroku>?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
 
+## Configurando o redis no heroku (produção)
+- Apos criar o BD Redis Obter os dados das variaveis na pagina do heroku:
+ <my-app> Resources > Add-ons > Heroku Redis > Settings
 
+- Criar e configurar as variaveis de ambiente do Redis no heroku
+REDIS_PASSWORD - fornecer a senha gerada pelo heroku
+REDIS_URL - fornecer a host gerado pelo heroku
+REDIS_PORT - fornecer a porta gerada pelo heroku
+
+Conteudo do arquivo de configuração do na app:
+
+redis.js
+~~~~
+if (process.env.NODE_ENV === 'development') {
+  export default {
+    host: process.env.REDIS_URL,
+    port: process.env.REDIS_PORT,
+  };
+
+} else {
+  export default {
+    host: process.env.REDIS_URL,
+    port: process.env.REDIS_PORT,
+    password: process.env.REDIS_PASSWORD,
+  };
+};
+
+~~~
 # Dicas Geral
 ## VSCode
 `Ctrl + Shift + H` - Para buscar qualquer ocorrencia do texto dentro do projeto no VSCode

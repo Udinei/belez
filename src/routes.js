@@ -1,12 +1,11 @@
 ﻿import { Router } from 'express';
 import multer from 'multer';
 import multerConfig from './config/multer';
-import multerConfigx from './config/multer-x';
 
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
-import FilexController from './app/controllers/FilexController';
+
 import authMiddleware from './app/middlewares/auth';
 import ProviderController from './app/controllers/ProviderController';
 import AppoitmentController from './app/controllers/AppoitmentController';
@@ -16,7 +15,6 @@ import AvailableController from './app/controllers/AvailableController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
-const uploadx = multer(multerConfigx);
 
 routes.post('/users', UserController.store);
 routes.post('/sessions', SessionController.store);
@@ -51,7 +49,7 @@ routes.put('/notifications/:id', NotificationController.update);
 
 // trata emvio de imagens
 //routes.post('/files', upload.single('file'), FileController.store);
-routes.post('/files', uploadx.single("file"), FileController.store);
+routes.post('/files', upload.single("file"), FileController.store);
 
 
 // multer - middlware que pode carregar um arquivo a ser enviado como parametro da requisicao

@@ -1,30 +1,7 @@
-﻿require('dotenv/config')
-const redis = require('redis')
-/** retorna a propriedade password para a configuração do Redis
-    somente se estiver em ambiente de produção
-    Nota: se o erro:  Ready check failed: NOAUTH Authentication required, for
-    exibido no log, aguardar, pois o servidor heroku ira restartar a aplicação */
-/*
-TODO: Ao tentar executar a funcao abaixo o O erro:
-This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). The promise rejected with the reason:
-ReplyError: Ready check failed: NOAUTH Authentication required.
-ver possivel SOLUÇÃO nos sites:
-   https://medium.com/@JonasJancarik/handling-those-unhandled-promise-rejections-when-using-javascript-async-await-and-ifee-5bac52a0b29f
-   https://medium.com/@programadriano/utilizando-cache-com-redis-mongodb-e-node-js-8b3d6461b966
-Solução paliativa: Comentar a linha da senha ao executar localmente o redis
-const ambiente = () => {
-  if (process.env.NODE_ENV !== 'development')
-    return 'password: process.env.REDIS_PASSWORD';
-    return '';
-
-}*/
-/*
-if (process.env.NODE_ENV !== 'development'){}
-export default {
-  host: process.env.REDIS_URL,
-  port: process.env.REDIS_PORT,
-  password: {process.env.NODE_ENV ? '' : process.env.REDIS_PASSWORD},
-};*/
+﻿/** Esse arquivo armazena os objetos de configuração do BD Redis
+ *  para ambiente de desenvolvimento e produção, localmente o Redis
+ * esta rodando no Docker REDIS_URL=127.0.0.1 e REDIS_PORT=6379
+*/
 
 if (process.env.NODE_ENV === 'development') {
   export default {
@@ -39,31 +16,3 @@ if (process.env.NODE_ENV === 'development') {
     password: process.env.REDIS_PASSWORD,
   };
 };
-/*
-module.exports = {
-  open: function () {
-    const
-    redis = require('redis'),
-    client = redis.createClient('redis://h:p539efb9eba05decc148ed1fe0f8987e9fe8eb1c5ec8238cbf24ad70816889ba2@ec2-52-54-229-237.compute-1.amazonaws.com:12339')
-
-    //var client = require('redis').createClient(process.env.REDIS_PORT, process.env.REDIS_URL);
-    //var client = require('redis').createClient(process.env.REDIS_URL);
-    //.selected_db = 1;
-    console.log('agora vai........')
-    client.on("error", function (err) {
-      console.log("Error..... " + err);
-    });
-
-    client.on('connect', function () {
-      console.log('Redis client connected');
-    });
-
-    return client;
-  },
-  close: function (client) {
-    client.quit();
-  }
-
-};
-*/
-
