@@ -62,7 +62,7 @@ class AvailableController {
 
       const dateAgendamento = utcToZonedTime(value, timeZone);
 
-      //console.log('value................', value);
+      console.log('value................', value);
       //console.log('utc timezoneNew Date.............', utcToZonedTime(new Date(), timeZone));
       console.log('data  Agendamento......', dateAgendamento);
       console.log('data hoje .............', compareDate);
@@ -73,10 +73,10 @@ class AvailableController {
       // menos de meia com avaiable=true
       return {
         time,
-        value: format(dateAgendamento, "yyyy-MM-dd'T'HH:mm:ssxxx"),
+        value: format(value, "yyyy-MM-dd'T'HH:mm:ssxxx"),
         avaiable:
-          isAfter(dateAgendamento, compareDate) //&&  // verifica se a data ja passou e
-          //!appointments.find(a => format(a.date, 'HH:mm') === time),
+          isAfter(value, compareDate) &&  // verifica se a data ja passou e
+          !appointments.find(a => format(a.date, 'HH:mm') === time),
         // se horario de agendamento disponivel ainda nao passou
         // formata Hora:Minutos 10:30 para comparar a hora
       };
