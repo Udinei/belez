@@ -17,7 +17,7 @@ class AvailableController {
       // obtem a data desejada de agendamento
     const { date } = req.query;
 
-    console.log('data pesquisada....', date);
+    console.log('data do agendamento enviada....', date);
 
     const timeZone = 'America/Cuiaba';
     const compareDate = utcToZonedTime(new Date(), timeZone);
@@ -62,9 +62,10 @@ class AvailableController {
 
       const dateAgendamento = utcToZonedTime(value, timeZone);
 
+      console.log('value................', value);
       console.log('dateAgendamento......', dateAgendamento);
       console.log('compareDate..........', compareDate);
-      console.log('New Date.............', new Date());
+      console.log('utc timezoneNew Date.............', utcToZonedTime(new Date(), timeZone));
       console.log('Comparação...........', isAfter(dateAgendamento, compareDate));
 
       // retorna uma lista com os horarios que ja venceram hoje,
