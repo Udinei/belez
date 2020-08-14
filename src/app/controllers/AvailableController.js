@@ -55,6 +55,7 @@ class AvailableController {
       const [hor, minute] = time.split(':');
 
       // value - Data no formato 2020-08-13T20:00:00.914Z
+      console.log('searchDate....', searchDate)
       const value = setSeconds(
         setMinutes(setHours(searchDate, hor), minute), // formata data
         0
