@@ -55,8 +55,7 @@ class AvailableController {
       const [hor, minute] = time.split(':');
 
       // value - Data no formato 2020-08-13T20:00:00.914Z
-      console.log('searchDate....', searchDate)
-      const value = setSeconds(
+          const value = setSeconds(
         setMinutes(setHours(searchDate, hor), minute), // formata data
         0
       );
@@ -76,7 +75,7 @@ class AvailableController {
         time,
         value: format(dateAgendamento, "yyyy-MM-dd'T'HH:mm:ssxxx"),
         avaiable:
-          isAfter(dateAgendamento, compareDate) &&  // verifica se a data ja passou e
+          isAfter(compareDate, dateAgendamento) &&  // verifica se a data ja passou e
           !appointments.find(a => format(a.date, 'HH:mm') === time),
         // se horario de agendamento disponivel ainda nao passou
         // formata Hora:Minutos 10:30 para comparar a hora
