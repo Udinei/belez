@@ -7,22 +7,29 @@ import {
 } from 'date-fns';
 import Appointment from '../models/Appointments';
 import { Op } from 'sequelize';
+import { utcToZonedTime } from 'date-fns-tz'; // trata timezone
+import pt from 'date-fns/locale/pt';
+
 
 class AvailableController {
 
   async index(req, res) {
-
+      // obtem a data desejada de agendamento
     const { date } = req.query;
-    console.log(date);
+
+    const timeZone = 'America/Cuiaba';
+    const compareDate = utcToZonedTime(new Date(), timeZone);
+
     // se a data nao foi informada
     if (!date) {
       return res.status(400).json({ error: 'Data inválida' });
     }
 
-    const searchDate = Number(date); // converte data para numero
+    // converte data em numero para usar em pesquisa
+    const searchDate = Number(date);
 
-    // retorna todos os agendamentos para o provedor informado
-    // que nao estejam cancelados e esteja entre as datas
+    // retorna todos os agendamentos para para a data informada do provedor informado
+    // que nao estejam cancelados e esteja entre as datas(hoje)
     const appointments = await Appointment.findAll({
       where: {
         provider_id: req.params.providerId,
@@ -37,7 +44,7 @@ class AvailableController {
     const schedule = [
       '08:00', '09:00', '10:00', '11:00', '12:00', '13:00',
       '14:00', '15:00', '16:00', '17:00', '18:00', '19:00',
-      '20:00',
+      '20:00','21:00','22:00', '23:00',
     ];
 
     // insere value horas, minutos e segundos em avaiable
@@ -45,22 +52,24 @@ class AvailableController {
 
       const [hor, minute] = time.split(':');
 
+      // value - Data no formato 2020-08-13T20:00:00.914Z
       const value = setSeconds(
         setMinutes(setHours(searchDate, hor), minute), // formata data
         0
       );
 
+      const dateAgendamento = utcToZonedTime(value, timeZone);
       // retorna uma lista com os horarios que ja venceram hoje,
       // com avaiable = false, e os horarios que vão vencer em
       // menos de meia com avaiable=true
       return {
         time,
-        value: format(value, "yyyy-MM-dd'T'HH:mm:ssxxx"),
+        value: format(dateAgendamento, "yyyy-MM-dd'T'HH:mm:ssxxx"),
         avaiable:
-          isAfter(value, new Date()) &&  // isAfter verifica se o horario ja passou
-          !appointments.find(a =>  // se encontra dentro de appointmets formata
-            // emcontra a data de agenciamento
-            format(a.date, 'HH:mm') === time),  //se a data for igual do vetor, formata Hora:Minutos 10:30
+          isAfter(dateAgendamento, compareDate) &&  // verifica se a data ja passou e
+          !appointments.find(a => format(a.date, 'HH:mm') === time),
+        // se horario de agendamento disponivel ainda nao passou
+        // formata Hora:Minutos 10:30 para comparar a hora
       };
 
     });
