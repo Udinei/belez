@@ -59,6 +59,9 @@ class AvailableController {
       );
 
       const dateAgendamento = utcToZonedTime(value, timeZone);
+      console.log('dateAgendamento......', dateAgendamento);
+      console.log('dateAgendamento......', compareDate);
+      console.log('New Date.............', new Date());
       // retorna uma lista com os horarios que ja venceram hoje,
       // com avaiable = false, e os horarios que vão vencer em
       // menos de meia com avaiable=true
