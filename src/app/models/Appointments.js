@@ -1,12 +1,10 @@
 ﻿import Sequelize, { Model } from 'sequelize';
 import { isBefore, subHours } from 'date-fns';
-import * as RNLocalize from "react-native-localize";
 
 class Appointments extends Model {
 
   static init(sequelize) { // sequelize - tem a conexão com BD
-    console.log('new date appointments.....', new Date());
-    console.log('timezone appointmens ....',RNLocalize.getTimeZone());
+    console.log('no server new date appointments.....', new Date());
 
     super.init(
       {
