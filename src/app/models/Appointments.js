@@ -4,7 +4,7 @@ import { isBefore, subHours } from 'date-fns';
 class Appointments extends Model {
 
   static init(sequelize) { // sequelize - tem a conexão com BD
-    console.log('no server new date appointments.....', new Date());
+    //console.log('no server new date appointments.....', new Date());
 
     super.init(
       {

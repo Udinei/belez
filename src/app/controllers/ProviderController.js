@@ -15,7 +15,7 @@ class ProviderController {
       ],
     });
 
-    console.log('provedores.....', providers);
+   // console.log('provedores.....', providers);
     res.json(providers);
   }
 

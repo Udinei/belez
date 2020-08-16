@@ -1,6 +1,6 @@
 ﻿import * as Yup from 'yup' // importando framewok de validação
 import { format } from 'date-fns-tz';
-import { startOfHour,  getMinutes, parseISO, isBefore, subHours } from 'date-fns';
+import {  getMinutes, parseISO, isBefore, subHours } from 'date-fns';
 import pt from 'date-fns/locale/pt'
 import User from '../models/User';
 import File from '../models/File';
@@ -40,7 +40,7 @@ class AppointmentsController {
       ],
     });
 
-    console.log('appointments.......', appointments);
+    //console.log('appointments.......', appointments);
 
     return res.json(appointments);
   }
