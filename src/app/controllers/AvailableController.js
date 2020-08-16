@@ -8,7 +8,6 @@ import {
 import Appointment from '../models/Appointments';
 import { Op } from 'sequelize';
 import { utcToZonedTime } from 'date-fns-tz'; // trata timezone
-import pt from 'date-fns/locale/pt';
 
 
 class AvailableController {
