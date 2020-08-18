@@ -15,11 +15,13 @@ class AvailableController {
   async index(req, res) {
     // obtem a data desejada de agendamento
     const { date } = req.query;
+    const { timeZoneFront } = req.query;
 
-    console.log('data do agendamento enviada....', date);
+    //console.log('Back timeZoneFront ......', timeZoneFront);
+    //console.log('data do agendamento enviada....', date);
+   // const timeZone = 'America/Cuiaba';
 
-    const timeZone = 'America/Cuiaba';
-    const compareDate = utcToZonedTime(new Date(), timeZone);
+    const compareDate = utcToZonedTime(new Date(), timeZoneFront);
 
     // se a data nao foi informada
     if (!date) {
@@ -59,13 +61,18 @@ class AvailableController {
         0
       );
 
-      const dateAgendamento = utcToZonedTime(value, timeZone);
+      //const dateAgendamento = utcToZonedTime(value, timeZone);
+      const dateAgendamento = utcToZonedTime(value, timeZoneFront);
 
-      console.log('value................', value);
+      //console.log('value................', value);
       //console.log('utc timezoneNew Date.............', utcToZonedTime(new Date(), timeZone));
       console.log('data  Agendamento......', dateAgendamento);
       console.log('data hoje .............', compareDate);
       console.log('Data agend. ja passou?..', isAfter(dateAgendamento, compareDate));
+
+
+      //console.log('appointmemt.date.bool......', format(a.date, 'HH:mm'));
+
 
       // retorna uma lista com os horarios que ja venceram hoje,
       // com avaiable = false, e os horarios que vão vencer em
@@ -82,7 +89,7 @@ class AvailableController {
 
     });
 
-    console.log(avaiable);
+    console.log('back horarios disponiveis......', avaiable);
 
     //1590683489159
     return res.json(avaiable);

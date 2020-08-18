@@ -40,7 +40,7 @@ class AppointmentsController {
       ],
     });
 
-    //console.log('appointments.......', appointments);
+    console.log('appointments.......', appointments);
 
     return res.json(appointments);
   }
@@ -80,7 +80,7 @@ class AppointmentsController {
 
     // pega a data somente com o inicio da hora (sem minuto e segundo)
     //const hourStart = startOfHour(parseISO(date));
-
+    console.log('date ao salvar....', date);
     const hourStart = parseISO(date);
     const minutos = getMinutes(new Date(date))
 
@@ -131,6 +131,9 @@ class AppointmentsController {
       return res.status(400).json({ error: 'Agendamento para esse dia e horario não esta disponivel' });
     }
 
+     console.log('salvando a data....................', date);
+     /*console.log('salvando user.id....................', req.userId);
+     console.log('salvando provider_id....................', provider_id);*/
 
     const appointments = await Appointment.create({
       user_id: req.userId,
@@ -154,7 +157,7 @@ class AppointmentsController {
       user: provider_id,
     });
 
-    console.log("...........agendamentos", appointments);
+    //console.log("...........agendamentos", appointments);
     return res.json(appointments);
   }
 
