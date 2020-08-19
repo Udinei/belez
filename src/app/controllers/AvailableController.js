@@ -16,6 +16,7 @@ class AvailableController {
     // obtem a data desejada de agendamento
     const { date } = req.query; // data enviada no timezone do dispositivo
     const { timeZoneFront } = req.query; // timezone enviado do dispositivo
+    console.log('timeZoneFront........',timeZoneFront)
     const compareDate = utcToZonedTime(new Date(), timeZoneFront);
 
     // se a data nao foi informada
@@ -75,7 +76,7 @@ class AvailableController {
 
       return {
         time,
-        value: format(value, "yyyy-MM-dd'T'HH:mm:ssxxx"),
+        value: format(utcToZonedTime(value, timeZoneFront), "yyyy-MM-dd'T'HH:mm:ssxxx"),
         avaiable:
           isAfter(utcToZonedTime(value, timeZoneFront), compareDate) &&  // verifica se a data ja passou e
           !appointments.find(a => format(utcToZonedTime(a.date, timeZoneFront), 'HH:mm') === time),
