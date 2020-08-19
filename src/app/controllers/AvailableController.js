@@ -14,9 +14,9 @@ class AvailableController {
 
   async index(req, res) {
     // obtem a data desejada de agendamento
-    const { date } = req.query;
-    const { timeZoneFront } = req.query;
-    const compareDate = new Date(); //utcToZonedTime(new Date(), timeZoneFront);
+    const { date } = req.query; // data enviada no timezone do dispositivo
+    const { timeZoneFront } = req.query; // timezone enviado do dispositivo
+    const compareDate = utcToZonedTime(new Date(), timeZoneFront);
 
     // se a data nao foi informada
     if (!date) {
@@ -72,12 +72,13 @@ class AvailableController {
       // retorna uma lista com os horarios que ja venceram hoje,
       // com avaiable = false, e os horarios que vão vencer em
       // menos de meia com avaiable=true
+
       return {
         time,
         value: format(value, "yyyy-MM-dd'T'HH:mm:ssxxx"),
         avaiable:
-          isAfter(value, compareDate) &&  // verifica se a data ja passou e
-          !appointments.find(a => format(a.date, 'HH:mm') === time),
+          isAfter(utcToZonedTime(value, timeZoneFront), compareDate) &&  // verifica se a data ja passou e
+          !appointments.find(a => format(utcToZonedTime(a.date, timeZoneFront), 'HH:mm') === time),
         // se horario de agendamento disponivel ainda nao passou
         // formata Hora:Minutos ex: 10:30 para comparar as horas da mesma data
       };
