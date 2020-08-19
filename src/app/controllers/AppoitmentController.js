@@ -80,7 +80,7 @@ class AppointmentsController {
 
     // pega a data somente com o inicio da hora (sem minuto e segundo)
     //const hourStart = startOfHour(parseISO(date));
-    console.log('date ao salvar....', date);
+    console.log('date ao salvar...........', date);
     const hourStart = parseISO(date);
     const minutos = getMinutes(new Date(date))
 
@@ -113,7 +113,7 @@ class AppointmentsController {
      const dateHojeFormatada = dateHoje+tzHora+".000Z";
 
     // hourStart - data desejada de agendamento, exibe msg se a data e o horario for menor que o momento atual
-    if (isBefore(hourStart, new Date(dateHojeFormatada))) {
+    if (isBefore(hourStart, new Date())) {
       return res.status(400).json({ error: 'Não é permitido datas passadas' })
     }
 
