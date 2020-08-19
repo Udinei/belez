@@ -16,12 +16,7 @@ class AvailableController {
     // obtem a data desejada de agendamento
     const { date } = req.query;
     const { timeZoneFront } = req.query;
-
-    //console.log('Back timeZoneFront ......', timeZoneFront);
-    //console.log('data do agendamento enviada....', date);
-   // const timeZone = 'America/Cuiaba';
-
-    const compareDate = utcToZonedTime(new Date(), timeZoneFront);
+    const compareDate = new Date(); //utcToZonedTime(new Date(), timeZoneFront);
 
     // se a data nao foi informada
     if (!date) {
@@ -64,7 +59,7 @@ class AvailableController {
       //const dateAgendamento = utcToZonedTime(value, timeZone);
       const dateAgendamento = utcToZonedTime(value, timeZoneFront);
 
-      //console.log('value................', value);
+      console.log('value................', value);
       //console.log('utc timezoneNew Date.............', utcToZonedTime(new Date(), timeZone));
       console.log('data  Agendamento......', dateAgendamento);
       console.log('data hoje .............', compareDate);
@@ -84,7 +79,7 @@ class AvailableController {
           isAfter(value, compareDate) &&  // verifica se a data ja passou e
           !appointments.find(a => format(a.date, 'HH:mm') === time),
         // se horario de agendamento disponivel ainda nao passou
-        // formata Hora:Minutos 10:30 para comparar a hora
+        // formata Hora:Minutos ex: 10:30 para comparar as horas da mesma data
       };
 
     });
