@@ -16,7 +16,6 @@ class AvailableController {
     // obtem a data desejada de agendamento
     const { date } = req.query; // data enviada no timezone do dispositivo
     const { timeZoneFront } = req.query; // timezone enviado do dispositivo
-    console.log('timeZoneFront........',timeZoneFront)
     const compareDate = utcToZonedTime(new Date(), timeZoneFront);
 
     // se a data nao foi informada
@@ -60,38 +59,40 @@ class AvailableController {
       //const dateAgendamento = utcToZonedTime(value, timeZone);
       const dateAgendamento = utcToZonedTime(value, timeZoneFront);
 
-      console.log('value................', value);
+
+      console.log('AvaibleController.................................');
+      console.log('date recebida do FrontEnd........', date);
+      console.log('timeZone do FrontEnd........', timeZoneFront);
+      console.log('searchDate..................', searchDate);
+      console.log('searchDate transformada para value................', value);
       //console.log('utc timezoneNew Date.............', utcToZonedTime(new Date(), timeZone));
       console.log('data  Agendamento......', dateAgendamento);
       console.log('data hoje .............', compareDate);
       console.log('Data agend. ja passou?..', isAfter(dateAgendamento, compareDate));
-
-
-      //console.log('appointmemt.date.bool......', format(a.date, 'HH:mm'));
+     //console.log('appointmemt.date.bool......', format(a.date, 'HH:mm'));
 
 
       // retorna uma lista com os horarios que ja venceram hoje,
       // com avaiable = false, e os horarios que vão vencer em
       // menos de meia com avaiable=true
-
       return {
         time,
-        value: format(utcToZonedTime(value, timeZoneFront), "yyyy-MM-dd'T'HH:mm:ssxxx"),
+        value: format(value, "yyyy-MM-dd'T'HH:mm:ssxxx"),
         avaiable:
-          isAfter(utcToZonedTime(value, timeZoneFront), compareDate) &&  // verifica se a data ja passou e
-          !appointments.find(a => format(utcToZonedTime(a.date, timeZoneFront), 'HH:mm') === time),
+          isAfter(value, new Date()) &&  // verifica se a data ja passou e
+          !appointments.find(a => format(a.date, 'HH:mm') === time),
         // se horario de agendamento disponivel ainda nao passou
         // formata Hora:Minutos ex: 10:30 para comparar as horas da mesma data
       };
 
     });
-       console.log('AvaibleController......');
+
+
        console.log('AvaibleController......',Intl.DateTimeFormat().resolvedOptions().timeZone);
        console.log('compareDate.toString ......', compareDate.toString());
        console.log('back horarios disponiveis......', avaiable);
 
-    //1590683489159
-    return res.json(avaiable);
+      return res.json(avaiable);
   }
 }
 

@@ -40,7 +40,7 @@ class AppointmentsController {
       ],
     });
 
-    console.log('appointments.......', appointments);
+   // console.log('appointments.......', appointments);
 
     return res.json(appointments);
   }
