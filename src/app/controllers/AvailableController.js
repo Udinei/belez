@@ -86,6 +86,7 @@ class AvailableController {
 
     });
        console.log('AvaibleController......');
+       console.log('AvaibleController......',Intl.DateTimeFormat().resolvedOptions().timeZone);
        console.log('compareDate.toString ......', compareDate.toString());
        console.log('back horarios disponiveis......', avaiable);
 
