@@ -80,7 +80,8 @@ class AvailableController {
         value: format(value, "yyyy-MM-dd'T'HH:mm:ssxxx"),
         avaiable:
           isAfter(value, new Date()) &&  // verifica se a data ja passou e
-          !appointments.find(a => format(a.date, 'HH:mm') === time),
+          !appointments.find(a => { console.log('a.date e time.......',a.date,time)
+                              return (format(a.date, 'HH:mm') === time)}),
         // se horario de agendamento disponivel ainda nao passou
         // formata Hora:Minutos ex: 10:30 para comparar as horas da mesma data
       };
