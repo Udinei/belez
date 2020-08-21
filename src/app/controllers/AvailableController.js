@@ -85,8 +85,9 @@ class AvailableController {
       };
 
     });
-
-    console.log('back horarios disponiveis......', avaiable);
+       console.log('AvaibleController......');
+       console.log('compareDate.toString ......', compareDate.toString());
+       console.log('back horarios disponiveis......', avaiable);
 
     //1590683489159
     return res.json(avaiable);
