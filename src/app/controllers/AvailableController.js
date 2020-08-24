@@ -7,7 +7,7 @@ import {
 } from 'date-fns';
 import Appointment from '../models/Appointments';
 import { Op } from 'sequelize';
-import { utcToZonedTime } from 'date-fns-tz'; // trata timezone
+import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz'; // trata timezone
 
 
 class AvailableController {
@@ -15,19 +15,18 @@ class AvailableController {
   async index(req, res) {
     // obtem a data desejada de agendamento
     const { date } = req.query; // data enviada no timezone do dispositivo
-    const { timeZoneFront } = req.query; // timezone enviado do dispositivo
-    const compareDate = utcToZonedTime(new Date(), timeZoneFront);
+    const { timeZoneFront } = req.query; // data enviada no timezone do dispositivo
 
     // se a data nao foi informada
     if (!date) {
       return res.status(400).json({ error: 'Data inválida' });
     }
 
-    // converte data em numero para usar em pesquisa
+    // converte data em numero para usar na pesquisa
     const searchDate = Number(date);
 
-    // retorna todos os agendamentos para para a data informada do provedor informado
-    // que nao estejam cancelados e esteja entre as datas(hoje)
+    // retorna todos os agendamentos do provedor, para a data desejada
+    // que nao estejam cancelados e esteja entre o inicio e o final do dia de hoje.
     const appointments = await Appointment.findAll({
       where: {
         provider_id: req.params.providerId,
@@ -50,53 +49,91 @@ class AvailableController {
 
       const [hor, minute] = time.split(':');
 
-      // value - Data no formato 2020-08-13T20:00:00.914Z
+      // value = Data no formato 2020-08-13T20:00:00.914Z
       const value = setSeconds(
-        setMinutes(setHours(searchDate, hor), minute), // formata data
+        setMinutes(setHours(searchDate, hor), minute), // insere, possiveis hora e minutos de agendamento na data desejada
         0
       );
 
-      //const dateAgendamento = utcToZonedTime(value, timeZone);
-      const dateAgendamento = utcToZonedTime(value, timeZoneFront);
+      // retorna uma lista com todos os possiveis horários, os que ja venceram hoje
+      // em avaiable retorna false, e os horarios que vão vencer em
+      // menos de meia retorna em avaiable true
 
+      const dataTimeZoneFront = utcToZonedTime(new Date(), timeZoneFront);
+      const valueTimeZoneFront = utcToZonedTime(value, timeZoneFront);
+      const timeTimeZoneFront = format(valueTimeZoneFront, 'HH:mm');
+      console.log('value......', value);
+      console.log('valueTimeZoneFront......', dataTimeZoneFront);
+      //  console.log('dataTimeZoneFront......',dataTimeZoneFront);
+      //console.log('Hora ja passou......',isAfter(valueTimeZoneFront, dataTimeZoneFront))
+      console.log('time......', time);
+      console.log('agora vai......', isAfter(value, dataTimeZoneFront) && !appointments.find(a => format(zonedTimeToUtc(a.date, timeZoneFront), 'HH:mm') === time));
+      console.log('agora vai.1111.....', appointments);
 
-      console.log('AvaibleController.................................');
-      console.log('date recebida do FrontEnd........', date);
-      console.log('timeZone do FrontEnd........', timeZoneFront);
-      console.log('searchDate..................', searchDate);
-      console.log('searchDate transformada para value................', value);
-      //console.log('utc timezoneNew Date.............', utcToZonedTime(new Date(), timeZone));
-      console.log('data  Agendamento......', dateAgendamento);
-      console.log('data hoje .............', compareDate);
-      console.log('Data agend. ja passou?..', isAfter(dateAgendamento, compareDate));
-     //console.log('appointmemt.date.bool......', format(a.date, 'HH:mm'));
-
-
-      // retorna uma lista com os horarios que ja venceram hoje,
-      // com avaiable = false, e os horarios que vão vencer em
-      // menos de meia com avaiable=true
       return {
         time,
         value: format(value, "yyyy-MM-dd'T'HH:mm:ssxxx"),
-        avaiable:
-          isAfter(value, new Date()) &&  // verifica se a data ja passou e
-          !appointments.find(a => { console.log('a.date e time.......',a.date,time);
-                                    console.log('format......', (format(a.date, 'HH:mm') === time));
-
-                              return (format(a.date, 'HH:mm') === time)}),
-        // se horario de agendamento disponivel ainda nao passou
-        // formata Hora:Minutos ex: 10:30 para comparar as horas da mesma data
+        avaiable: true,
       };
+
+      /*
+       return {
+         time,
+         value: format(value, "yyyy-MM-dd'T'HH:mm:ssxxx"),
+         avaiable:
+           isAfter(value, dataTimeZoneFront) &&  // se a data data agendada ja passou de hoje retorna false
+           !appointments.find(a => format(a.date, 'HH:mm') === time),
+         // se encontrar um agendamento para o horario(time) retorna false
+       };*/
+
+
+
+
+      /*return {
+        time,
+        value: format(value, "yyyy-MM-dd'T'HH:mm:ssxxx"),
+        avaiable:
+          isAfter(value, new Date()) &&  // se a data data agendada ja passou de hoje retorna false
+          !appointments.find(a => format(a.date, 'HH:mm') === time),
+        // se encontrar um agendamento para o horario(time) retorna false
+      };*/
 
     });
 
+    avaiable.push({'appointments': appointments});
 
-       console.log('AvaibleController......',Intl.DateTimeFormat().resolvedOptions().timeZone);
-       console.log('compareDate.toString ......', compareDate.toString());
-       console.log('back horarios disponiveis......', avaiable);
-
-      return res.json(avaiable);
+    console.log('Time Zone do servidor......', Intl.DateTimeFormat().resolvedOptions().timeZone);
+    return res.json(avaiable);
   }
-}
 
+
+  async getAppointments(req, res) {
+    // obtem a data desejada de agendamento
+    const { date } = req.query; // data enviada no timezone do dispositivo
+    const { timeZoneFront } = req.query; // data enviada no timezone do dispositivo
+
+    // se a data nao foi informada
+    if (!date) {
+      return res.status(400).json({ error: 'Data inválida' });
+    }
+
+    // converte data em numero para usar na pesquisa
+    const searchDate = Number(date);
+
+    // retorna todos os agendamentos do provedor, para a data desejada
+    // que nao estejam cancelados e esteja entre o inicio e o final do dia de hoje.
+    const appointments = await Appointment.findAll({
+      where: {
+        provider_id: req.params.providerId,
+        canceled_at: null,
+        date: {
+          [Op.between]: [startOfDay(searchDate), endOfDay(searchDate)],
+        }
+      }
+    });
+
+    return res.json(appointments);
+  }
+
+}
 export default new AvailableController();

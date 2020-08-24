@@ -80,7 +80,7 @@ class AppointmentsController {
 
     // pega a data somente com o inicio da hora (sem minuto e segundo)
     //const hourStart = startOfHour(parseISO(date));
-    console.log('date ao salvar...........', date);
+
     const hourStart = parseISO(date);
     const minutos = getMinutes(new Date(date))
 
@@ -88,6 +88,7 @@ class AppointmentsController {
     if (minutos !== 30 && minutos !== 0) {
       return res.status(400).json({ error: 'Agendamentos são permitidos a cada 30 minutos' })
     }
+
 
         // opções de geração da data atual para comparação com a data desejada de agendamento,
         // enviada na requisição, a data sera criada com toLocaleDateString
@@ -111,11 +112,12 @@ class AppointmentsController {
 
      // para comparação com a data desejada de agendamento, acresenta milisegundos e Zona
      const dateHojeFormatada = dateHoje+tzHora+".000Z";
-
+     console.log('date ao salvar...........', new Date(), hourStart);
     // hourStart - data desejada de agendamento, exibe msg se a data e o horario for menor que o momento atual
     if (isBefore(hourStart, new Date())) {
       return res.status(400).json({ error: 'Não é permitido datas passadas' })
     }
+
 
     // verifica no BD se a data esta disponivel
     const checkAvailability = await Appointment.findOne({
