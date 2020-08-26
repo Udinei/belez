@@ -5,3 +5,4 @@ package-lock.json
 dist
 tmp/uploads/*
 !tmp/uploads/.gitkeep
+config.txt
