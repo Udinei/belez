@@ -31,15 +31,20 @@ routes.get('/providers', ProviderController.index);
 // lista todos os horarios disponiveis para o prestador de serviço especifico
 routes.get('/providers/:providerId/available', AvailableController.index);
 
+// lista todos os horarios disponiveis para o prestador de serviço especifico
+routes.get('/users/:userId/available', AvailableController.getAppointmentsUser);
+
+
 // listgem de agendamentos
 routes.get('/appoitments', AppoitmentController.index);
 
-// agendamentos
+// criar agendamentos
 routes.post('/appoitments', AppoitmentController.store);
 
 // cancelar agendamento
 routes.delete('/appoitments/:id', AppoitmentController.delete);
 
+// recuperar cronograma da agenda
 routes.get('/schedule', ScheduleController.index);
 
 routes.get('/notifications', NotificationController.index);

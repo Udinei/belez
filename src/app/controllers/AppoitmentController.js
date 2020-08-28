@@ -96,7 +96,7 @@ class AppointmentsController {
         year: 'numeric', month: '2-digit', day: '2-digit',
         hour: '2-digit', minute: '2-digit', second: '2-digit',
         hour12: false,
-        timeZone: 'America/Campo_Grande'
+        timeZone: 'America/Cuiaba'
       };
 
       /** tzHoje - data com time zone, foi necessario criar e formatar a data atual
@@ -134,6 +134,7 @@ class AppointmentsController {
     }
 
      console.log('salvando a data....................', date);
+
      /*console.log('salvando user.id....................', req.userId);
      console.log('salvando provider_id....................', provider_id);*/
 
