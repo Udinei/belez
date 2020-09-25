@@ -2,6 +2,7 @@
 import File from '../models/File';
 
 class ProviderController {
+
   async index(req, res) {
     const providers = await User.findAll({
       where: { provider: true },
@@ -18,8 +19,6 @@ class ProviderController {
    // console.log('provedores.....', providers);
     res.json(providers);
   }
-
-
 
 }
 export default new ProviderController();

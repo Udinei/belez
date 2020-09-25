@@ -2,8 +2,10 @@
 import { format } from 'date-fns-tz';
 import {  getMinutes, parseISO, isBefore, subHours } from 'date-fns';
 import pt from 'date-fns/locale/pt'
+
 import User from '../models/User';
 import File from '../models/File';
+
 import Appointment from '../models/Appointments';
 import Notification from '../schemas/Notification';
 
@@ -18,10 +20,10 @@ class AppointmentsController {
   async index(req, res) {
     const { page = 1 } = req.query; // se valor de page nao informado inicia page com 1
 
-    const appointments = await Appointment.findAll({
+    /*const appointments = await Appointment.findAll({
       where: { user_id: req.userId, canceled_at: null },
       order: ['date'],
-      attributes: ['id', 'date', 'past', 'cancelable'], // past =false se o horario ainda nao passou
+      attributes: ['id', 'date', 'past', 'cancelable'],
       limit: 20, // qtd de registro da paginação
       offset: (page - 1) * 20,
       include: [
@@ -38,21 +40,87 @@ class AppointmentsController {
           ]
         }
       ],
+    });*/
+
+    const appointments = await Appointment.findAll({
+      where: { user_id: req.userId, canceled_at: null },
+      order: ['date'],
+      attributes: ['id', 'date', 'past', 'cancelable', 'contact_id'], // past =false se o horario ainda nao passou
+      limit: 20, // qtd de registro da paginação
+      offset: (page - 1) * 20,
+      include: [
+        {
+          model: User,
+          as: 'contact',
+          attributes: ['id', 'name'],
+          include: [
+            {
+              model: File,
+              as: 'avatar',
+              attributes: ['id', 'path', 'url'],
+            }
+          ]
+        }
+      ],
     });
 
-   // console.log('appointments.......', appointments);
+    console.log('appointments.......', appointments);
 
     return res.json(appointments);
   }
 
+ // listagens dos agendamentos
+ async indexContact(req, res) {
+   console.log('chegou no metodo.....');
+  const { page = 1 } = req.query; // se valor de page nao informado inicia page com 1
+  const { Op } = require("sequelize");
+
+  const appointments = await Appointment.findAll({
+    where: { user_id: req.userId, canceled_at: null, contact_id: {[Op.not]: null} },
+    order: ['date'],
+    attributes: ['id', 'date', 'past', 'cancelable', 'contact_id'], // past =false se o horario ainda nao passou
+    limit: 20, // qtd de registro da paginação
+    offset: (page - 1) * 20,
+    include: [
+      {
+        model: User,
+        as: 'contact',
+        attributes: ['id', 'name'],
+        include: [
+          {
+            model: File,
+            as: 'avatar',
+            attributes: ['id', 'path', 'url'],
+          }
+        ]
+      }
+    ],
+  });
+
+  console.log(' retorno novo index.......', appointments);
+
+  return res.json(appointments);
+}
+
   // criar um agendamento
   async store(req, res) {
+
+   // obtem da requisição o provedor e a data desejada para agendamento
+   /*if(!req.body.provider_id){
+    } else{ const { provider_id, date } = req.body;
+      const { contact_id, date } = req.body;
+   }*/
+   const { contact_id, date } = req.body;
+      console.log('contact................', contact_id);
+      console.log('salvando user.id....................', req.userId);
+
     // informa os dados obrigatorios a serem enviados na requisição
     const schema = Yup.object().shape({
-      provider_id: Yup.number().required(),
+      contact_id: Yup.number().required(),
       date: Yup.date().required(),
     });
 
+     console.log('schema......',schema);
 
     // Verifica se os dados obrigatorios, provedor_id e date(data de agendamento)
     // foram enviados na requisição para fazer o agendamento
@@ -60,16 +128,11 @@ class AppointmentsController {
       return res.status(400).json({ error: 'validation fails' });
     }
 
-    // obtem da requisição o provedor e a data desejada para agendamento
-    const { provider_id, date } = req.body;
-
-
     const checkIsProvider = await User.findOne({
-      where: { id: provider_id, provider: true },
+      where: { id: req.userId, provider: false },
     });
 
     // TODO: O usuario prestador de serviço nao pode agender um serviço pra si proprio
-
 
     // verifica se o usuario de id informado que esta tentando cadastrar uma agendamento
     // é um provedor de serviço, se usuario nao for um prestador de servico
@@ -122,7 +185,7 @@ class AppointmentsController {
     // verifica no BD se a data esta disponivel
     const checkAvailability = await Appointment.findOne({
       where: {
-        provider_id,
+        contact_id,
         canceled_at: null,  // somente os que não foram cancelados
         date: date,
       },
@@ -133,16 +196,16 @@ class AppointmentsController {
       return res.status(400).json({ error: 'Agendamento para esse dia e horario não esta disponivel' });
     }
 
-     console.log('salvando a data....................', date);
-
+     //console.log('salvando contact_id....................', contact_id);
      /*console.log('salvando user.id....................', req.userId);
      console.log('salvando provider_id....................', provider_id);*/
 
     const appointments = await Appointment.create({
       user_id: req.userId,
-      provider_id,
+      contact_id,
       date: date,
     });
+    console.log('salvando appointments....................', contact_id);
 
     // recupera o usuario por id
     const user = await User.findByPk(req.userId);
@@ -154,14 +217,21 @@ class AppointmentsController {
       { locale: pt }
     );
 
-    // notificando o provedor de servico
+    // notificando o provedor de servico, que um novo agendamento para ele foi criado
+   // await this.createNotification(user, formattedDate, contact_id);
+
+
+    console.log("...........agendamentos", appointments);
+    return res.json(appointments);
+  }
+
+
+
+  async createNotification(user, formattedDate, provider_id) {
     await Notification.create({
       content: `Novo agendamento de ${user.name} para ${formattedDate}`,
       user: provider_id,
     });
-
-    //console.log("...........agendamentos", appointments);
-    return res.json(appointments);
   }
 
   // esse metodo não deleta o registro, ele preenche o campo canceled_at

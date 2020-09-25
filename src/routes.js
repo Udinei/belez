@@ -5,6 +5,7 @@ import multerConfig from './config/multer';
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
+import ContatoController from './app/controllers/ContatoController'
 
 import authMiddleware from './app/middlewares/auth';
 import ProviderController from './app/controllers/ProviderController';
@@ -25,18 +26,28 @@ routes.use(authMiddleware);
 // usuarios do sistema
 routes.put('/users', UserController.update);
 
+routes.post('/contatos', ContatoController.store);
+
+routes.get('/contatos', ContatoController.index);
+
 // usuarios prestadores de servico
 routes.get('/providers', ProviderController.index);
 
 // lista todos os horarios disponiveis para o prestador de serviço especifico
 routes.get('/providers/:providerId/available', AvailableController.index);
 
+// lista todos os horarios disponiveis para o contato especifico
+routes.get('/contacts/:contactId/available', AvailableController.getAppointmentsContact);
+
 // lista todos os horarios disponiveis para o prestador de serviço especifico
 routes.get('/users/:userId/available', AvailableController.getAppointmentsUser);
 
 
-// listgem de agendamentos
+// listgem de agendamentos provider
 routes.get('/appoitments', AppoitmentController.index);
+
+// listgem de agendamentos contatos
+routes.get('/appoitments/contacts', AppoitmentController.indexContact);
 
 // criar agendamentos
 routes.post('/appoitments', AppoitmentController.store);

@@ -21,6 +21,36 @@ Startar o processamento de filas do redis em blackground via Queue (dev) </br>
 Iniciar a app com: (dev) </br>
  `yarn dev`
 
+## Acessando mongoDB no container
+# Comandos mongoDB
+Ver a versao que esta rodando no container
+docker exec -it <nome_container> /usr/bin/mongo --eval "db.version()"
+
+# Acessar mongoDB rodando no docker. Entrar no terminal via cmd e executar o comando abaixo
+
+docker exec -it <nome_Container> /usr/bin/mongo
+será exibido o acesso ao servidor mongoDB
+ex: MongoDB shell version v4.2.6
+
+# Comandos basicos que podem ser executados no mongoDB
+## Lista todos os comandos que podem ser aplicados no banco de dados.
+db.help()
+
+## Mostra todos os bancos de dados existentes no servidor.
+show dbs
+
+## Mostra qual banco de dados está sendo usado.
+Banco de dados default usado é o test:
+db
+
+
+## Acessa um determinado banco de dados, quando ele existe. Se o banco não existe ele é criado automaticamente:
+use nomeBD
+
+## Removendo todos os registros da collections contatos:
+db.contatos.remove({})
+
+
 ## Rotas url local
 "base_url": "http://localhost:3333",
 

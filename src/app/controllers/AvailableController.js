@@ -8,7 +8,14 @@ import {
 import Appointment from '../models/Appointments';
 import { Op } from 'sequelize';
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz'; // trata timezone
+
 import User from '../models/User';
+
+ const schedule = [
+      '08:00', '09:00', '10:00', '11:00', '12:00', '13:00',
+      '14:00', '15:00', '16:00', '17:00', '18:00', '19:00',
+      '20:00',
+ ];
 
 class AvailableController {
 
@@ -37,11 +44,11 @@ class AvailableController {
     });
 
     // as datas serão formatadas em schedule: 2020-06-23 08:30
-    const schedule = [
+   /* const schedule = [
       '08:00', '09:00', '10:00', '11:00', '12:00', '13:00',
       '14:00', '15:00', '16:00', '17:00', '18:00', '19:00',
       '20:00',
-    ];
+    ];*/
 
     // insere value horas, minutos e segundos em avaiable
     const avaiable = schedule.map(time => {
@@ -92,17 +99,84 @@ class AvailableController {
           [Op.between]: [startOfDay(searchDate), endOfDay(searchDate)],
         }
       },
+     /** include: [
+        {
+          model: User,
+          as: 'contact',
+          attributes: ['id', 'name'],
+        }
+        ]*/
+    });
+
+   console.log('appointmentsUser............1',appointmentsUser);
+
+
+    return res.json(appointmentsUser);
+  }
+
+  async getAppointmentsContact(req, res) {
+
+    // obtem a data desejada de agendamento
+    const { date } = req.query; // data enviada no timezone do dispositivo
+
+    // se a data nao foi informada
+    if (!date) {
+      return res.status(400).json({ error: 'Data inválida' });
+    }
+
+    // converte data em numero para usar na pesquisa
+    const searchDate = Number(date);
+
+    // retorna todos os agendamentos do provedor, para a data desejada
+    // que nao estejam cancelados e esteja entre o inicio e o final do dia de hoje.
+    const appointmentsContacts = await Appointment.findAll({
+      where: {
+        contact_id: req.params.contactId,
+        canceled_at: null,
+        date: {
+          [Op.between]: [startOfDay(searchDate), endOfDay(searchDate)],
+        }
+      },
       include: [
         {
           model: User,
-          as: 'provider',
-          attributes: ['name'],
+          as: 'user',
+          attributes: ['id'],
         }
         ]
     });
 
-    return res.json(appointmentsUser);
+    // insere value horas, minutos e segundos em avaiable
+    const avaiable = schedule.map(time => {
+
+      const [hor, minute] = time.split(':');
+
+      // value = Data no formato 2020-08-13T20:00:00.914Z
+      const value = setSeconds(
+        setMinutes(setHours(searchDate, hor), minute), // insere, possiveis hora e minutos de agendamento na data desejada
+        0
+      );
+
+      // retorna uma lista com todos os possiveis horários
+      // a disponibilidade dos horarios sera calculada em avaiable no frontend
+      return {
+        time,
+        value: format(value, "yyyy-MM-dd'T'HH:mm:ssxxx"),
+        avaiable: true,
+      };
+  });
+
+    avaiable.push({'appointments': appointmentsContacts});
+
+    console.log('Time Zone do servidor......', Intl.DateTimeFormat().resolvedOptions().timeZone);
+    return res.json(avaiable);
+
+    //console.log('...........appointmentsContacts', appointmentsContacts);
+
+    //return res.json(appointmentsContacts);
   }
+
+
 
 }
 export default new AvailableController();

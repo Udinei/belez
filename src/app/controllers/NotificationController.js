@@ -13,7 +13,7 @@ class NotificationController {
     // se usuario nao for um prestador de servico
     if (!checkIsProvider) {
       return res.status(401)
-        .json({ error: 'Você não pode visulizar notificações' });
+        .json({ error: 'Você não pode visualizar notificações' });
     }
 
     // find - retorna varias notificacoes
