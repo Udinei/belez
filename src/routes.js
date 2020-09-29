@@ -20,6 +20,9 @@ const upload = multer(multerConfig);
 routes.post('/users', UserController.store);
 routes.post('/sessions', SessionController.store);
 
+// rota de testes de action criadas no buddy
+routes.get('/', (req, res) => res.send('ok'));
+
 // somente as rotas abaixo dessa rota vao usar o middleware (authMiddleware) de forma global (chamado sempre que uma rota for requisitado)
 routes.use(authMiddleware);
 
